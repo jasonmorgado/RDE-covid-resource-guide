@@ -14,8 +14,5 @@
 
 
   <!-- List all currently scheduled tasks -->
-<cfschedule
-  action="list"
-  result="res"
->
+<cfschedule action="list" result="res">
 <cfdump var=#res#>
