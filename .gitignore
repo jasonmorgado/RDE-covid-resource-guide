@@ -1,0 +1,6 @@
+
+*.csv
+box.exe
+*.secret
+.env
+*.log
