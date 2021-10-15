@@ -44,9 +44,6 @@ This application depends on a data aggregator that runs once a day.
 
 The current implementation involves running `schedule_aggregator.cfm` to start the scheduled task, and that will schedule `data_aggregator.cfm` to be ran once a day.
 
-
-From there we will need to set up the Datasource, which tells Lucee how to connect to the database.
-
 To run `schedule_aggregator`, you'll need to open it from the directory viewer that opens with the server.
 
 You may also use Lucee > Open > Site Home > schedule_aggregator.cfm
