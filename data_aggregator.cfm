@@ -31,8 +31,11 @@ function fetch_covid_data(){
 
 
 function fetch_vaccine_data(){
+  // Fetches json file containing yesterday's Vaccine data by county for NJ/NY/CT
   fileURL = "https://data.cdc.gov/resource/8xkx-amqh.json?";
-  fileURL &= "$where=recip_state in('NJ', 'NY', 'CT')"
+  fileURL &= "$where=recip_state in('NJ', 'NY', 'CT')";
+  yesterday = DateAdd('d',-1,Now())
+  fileURL &= "&date=" & dateTimeFormat(yesterday, "yyyy-MM-dd");
   cfhttp(url=fileURL, method="GET", file="8xkx-amqh.json");
 }
 

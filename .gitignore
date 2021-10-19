@@ -4,3 +4,4 @@ box.exe
 *.secret
 .env
 *.log
+*.json
