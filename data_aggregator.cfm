@@ -10,10 +10,11 @@ function run_aggregator(){
   }
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
+  // clear_covid_data();
   fetch_covid_data();
   insert_covid_data();
   calculate_covid_stats();
-  fetch_vaccine_data();
+  // fetch_vaccine_data();
   // More aggregation scripts here
 }
 
@@ -26,6 +27,12 @@ function days_since_update(){
   return days_since_update
 }
 
+function clear_covid_data(){
+  writeOutput("<br>Clearing Covid table:");
+  sql_query = "DELETE FROM covid_data";
+  myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+  cfdump(var=myQuery);
+}
 
 function fetch_covid_data(){
   // Fetches csv file containing today's Covid Cases/Deaths by county.
