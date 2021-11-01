@@ -92,7 +92,7 @@ function insert_covid_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
-      sql_query = "INSERT INTO covid_data (fips, date, daily_cases, daily_deaths) VALUES " & list
+      sql_query = "INSERT INTO covid_data (fips, date, total_cases, total_deaths) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
