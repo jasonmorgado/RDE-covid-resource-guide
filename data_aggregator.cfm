@@ -15,11 +15,19 @@ function run_aggregator(){
   insert_covid_data();
   calculate_covid_stats();
   // fetch_vaccine_data();
+  // fetch_covid_data();
+  // insert_covid_data();
+  // calculate_covid_stats();
+  // / fetch_vaccine_data();
   // More aggregation scripts here
 }
 
 function days_since_update(){
   // Returns number of days since the aggregator has run.
+  if(NOT FileExists("last_ran_aggregator.log")){
+    yesterday = DateAdd('d', -1, now())
+    cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(yesterday, "yyyy.MM.dd HH:nn:ss ") #);
+  }
   cffile(action="read", file="last_ran_aggregator.log", variable="last_ran_string");
   last_ran_datetime = parseDateTime(last_ran_string);
   days_since_update = DateDiff("d", last_ran_datetime, now());
