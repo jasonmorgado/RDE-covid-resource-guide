@@ -15,10 +15,6 @@ function run_aggregator(){
   insert_covid_data();
   calculate_covid_stats();
   // fetch_vaccine_data();
-  // fetch_covid_data();
-  // insert_covid_data();
-  // calculate_covid_stats();
-  // / fetch_vaccine_data();
   // More aggregation scripts here
 }
 
