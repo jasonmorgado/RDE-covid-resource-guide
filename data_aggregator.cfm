@@ -10,15 +10,20 @@ function run_aggregator(){
   }
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
+  // clear_covid_data();
   fetch_covid_data();
   insert_covid_data();
   calculate_covid_stats();
-  fetch_vaccine_data();
+  // fetch_vaccine_data();
   // More aggregation scripts here
 }
 
 function days_since_update(){
   // Returns number of days since the aggregator has run.
+  if(NOT FileExists("last_ran_aggregator.log")){
+    yesterday = DateAdd('d', -1, now())
+    cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(yesterday, "yyyy.MM.dd HH:nn:ss ") #);
+  }
   cffile(action="read", file="last_ran_aggregator.log", variable="last_ran_string");
   last_ran_datetime = parseDateTime(last_ran_string);
   days_since_update = DateDiff("d", last_ran_datetime, now());
@@ -26,6 +31,12 @@ function days_since_update(){
   return days_since_update
 }
 
+function clear_covid_data(){
+  writeOutput("<br>Clearing Covid table:");
+  sql_query = "DELETE FROM covid_data";
+  myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+  cfdump(var=myQuery);
+}
 
 function fetch_covid_data(){
   // Fetches csv file containing today's Covid Cases/Deaths by county.
@@ -92,7 +103,7 @@ function insert_covid_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
-      sql_query = "INSERT INTO covid_data (fips, date, daily_cases, daily_deaths) VALUES " & list
+      sql_query = "INSERT INTO covid_data (fips, date, total_cases, total_deaths) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
