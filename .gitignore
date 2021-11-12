@@ -5,3 +5,4 @@ box.exe
 .env
 *.log
 8xkx-amqh.json
+*.py
