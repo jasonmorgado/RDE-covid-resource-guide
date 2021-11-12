@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import AjaxComponent from "./test_ajax_component.jsx";
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
         >
           Learn React
         </a>
+        <AjaxComponent/>
       </header>
+
     </div>
   );
 }
