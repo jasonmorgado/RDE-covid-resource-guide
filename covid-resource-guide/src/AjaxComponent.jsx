@@ -27,7 +27,7 @@ function AjaxComponent() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:61043/rest/metrics/CovidData/test")
+    fetch("http://localhost:8080/rest/metrics/CovidData/test")
       .then(response => response.json())
       .then(
         (json_string) => {
