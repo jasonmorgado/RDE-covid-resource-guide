@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import AjaxComponent from "./test_ajax_component.jsx";
+import AjaxComponent from "./AjaxComponent.jsx";
 
 function App() {
   return (

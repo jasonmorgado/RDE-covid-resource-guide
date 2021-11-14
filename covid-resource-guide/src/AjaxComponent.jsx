@@ -1,26 +1,20 @@
 import React, { useState, useEffect} from 'react';
 
+// From https://reactjs.org/docs/faq-ajax.html
+
 function AjaxComponent() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
 
-  // Note: the empty deps array [] means
-  // this useEffect will run once
-  // similar to componentDidMount()
   useEffect(() => {
-    fetch("http://localhost:56207/rest/metrics/CovidData/test")
+    fetch("http://localhost:61043/rest/metrics/CovidData/test")
       .then(res => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
-          //setItems(result);
           setQuery(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -34,7 +28,7 @@ function AjaxComponent() {
     return <div>Loading...</div>;
   } else {
     return (
-      <div>query</div>
+      <div>{query}</div>
     );
   }
 }
