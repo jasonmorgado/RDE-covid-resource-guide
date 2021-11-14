@@ -21,8 +21,8 @@ component restpath="/CovidData"  rest="true" {
       sql_query = "SELECT TOP 10 * FROM covid_data";
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
       record_count = myQuery.recordcount;
-      query_string = SerializeJSON(myQuery, true);
-      // When False, returns a list of rows like {"COLUMNS":["fips", "date" , ...]}
+      query_string = SerializeJSON(myQuery, false);
+      // When False, returns a list of rows like {"COLUMNS":["fips", "date" , ...], DATA:[row1, row2]}
       // When True returns a json with {ROWCOUNT: NUM, "COLUMNS":["col1", "col2"], DATA: {"col1:[All items of col1]"}}
 
       // CORS header

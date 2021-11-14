@@ -2,18 +2,41 @@ import React, { useState, useEffect} from 'react';
 
 // From https://reactjs.org/docs/faq-ajax.html
 
+function getTable(rows){
+  if(rows){
+    const table_rows = rows.map((row) =>
+      <tr key={row[2]}>
+        <td>{row[0]}</td>
+        <td>{row[1]}</td>
+        <td>{row[2]}</td>
+        <td>{row[4]}</td>
+        <td>{row[6]}</td>
+      </tr>
+    );
+    const table = (<table>{table_rows}</table>)
+    return table
+  }else{
+    return <div>Loading table...</div>
+  }
+
+}
+
 function AjaxComponent() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [query, setQuery] = useState("");
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:61043/rest/metrics/CovidData/test")
-      .then(res => res.json())
+      .then(response => response.json())
       .then(
-        (result) => {
+        (json_string) => {
+          let json_data = JSON.parse(json_string);
+          console.log(json_data);
+
+          let data_rows = json_data.DATA;
           setIsLoaded(true);
-          setQuery(result);
+          setRows(data_rows);
         },
         (error) => {
           setIsLoaded(true);
@@ -28,7 +51,9 @@ function AjaxComponent() {
     return <div>Loading...</div>;
   } else {
     return (
-      <div>{query}</div>
+      <div>
+      {getTable(rows)}
+      </div>
     );
   }
 }
