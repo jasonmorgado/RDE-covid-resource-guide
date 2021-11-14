@@ -32,7 +32,6 @@ function AjaxComponent() {
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
-          console.log(json_data);
 
           let data_rows = json_data.DATA;
           setIsLoaded(true);
