@@ -38,6 +38,13 @@ where NEW_PASSWORD is replaced with a password of your choice.
 
  You can run `test_database.cfm` to verify the connection.
 
+### Setting up the REST API
+1. According to this [Lucee guide](https://docs.lucee.org/guides/Various/rest-services.html) we'll have to configure the Lucee web server to open the API.  Go into the Lucee admin interface.
+1. Go to Archives & Resources > Rest
+1. In virtual type "/metrics" and in physical type "/", without the quotes of course.
+1. Check default, hit save.
+The REST API should now be working when you type the correct url. Do keep in mind Commandbox picks a port at random, which is not fun.
+
 ## Scheduling the Data Aggregator
 
 This application depends on a data aggregator that runs once a day.
@@ -49,3 +56,9 @@ To run `schedule_aggregator`, you'll need to open it from the directory viewer t
 You may also use Lucee > Open > Site Home > schedule_aggregator.cfm
 
 This window will show all scripts previously scheduled to run, followed by scripts that are now scheduled to run. The data aggregator should be on this list.
+
+## Setting up ReactJS
+1. You'll need to download [Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you haven't already.
+1. Navigate to the covid_resource_guide directory and call `npm install` This should install the necessary packages.
+1. Run `npm start` to start the Node server.
+Note: I recommend starting the Lucee server first, since `npm start` will hang in your CLI.

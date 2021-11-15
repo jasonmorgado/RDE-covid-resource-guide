@@ -1,0 +1,10 @@
+{
+    "app":{
+        "restMappings":"/rest/*,/api/*"
+    },
+    "web":{
+        "http":{
+            "port":"8080"
+        }
+    }
+}
