@@ -40,3 +40,12 @@
 table, th, td {
   border: 1px solid red;
 }
+
+li {
+    color: #908e8e;
+    padding: 5px 15px;
+}
+
+#ChartsInput {
+  display:flex
+}
