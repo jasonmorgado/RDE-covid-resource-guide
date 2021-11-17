@@ -14,14 +14,10 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #FFFFFF;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -38,14 +34,17 @@
 }
 
 table, th, td {
-  border: 1px solid red;
+  border: 1px solid black;
+  color: #000000
 }
 
-li {
-    color: #908e8e;
+li, span {
+    color: #000000;
     padding: 5px 15px;
+    font-size: 15px;
 }
 
 #ChartsInput {
-  display:flex
+  display:flex;
+  align-items:stretch;
 }
