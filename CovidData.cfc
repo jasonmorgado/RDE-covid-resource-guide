@@ -33,4 +33,31 @@ component restpath="/CovidData"  rest="true" {
 
       return query_string;
     }
+
+    remote string function getCovidSums(
+            required string start_date restargsource="Path",
+            required string end_date restargsource="Path",
+            required string county_list restargsource="Path",
+            ) httpmethod="GET" restpath="covid_sums/{start_date}&{end_date}&{county_list}"
+    { // Quite the function declaration syntax
+      // URL is: "http://localhost:8080/rest/metrics/CovidData/covidsums/{start_date}&{end_date}&{county_list}
+
+      // Generate SQL Query
+      cffile(action="read", file="covid_sum_query.sql", variable="sql_query");
+      sql_query = Replace(sql_query, "{START_DATE}", start_date);
+      sql_query = Replace(sql_query, "{END_DATE}", end_date);
+
+      // If we passed a non-empty county_list, filter by that too
+      if (county_list != "()"){
+        sql_query = Replace(sql_query, "1=1", "covid_data.fips IN " & county_list);
+      }
+
+      // Get rows
+      myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+      query_string = SerializeJSON(myQuery, false);
+
+      // CORS header
+      cfheader(name="Access-Control-Allow-Origin", value="*");
+      return query_string
+    }
 }
