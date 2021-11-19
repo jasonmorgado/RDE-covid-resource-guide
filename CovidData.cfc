@@ -39,8 +39,10 @@ component restpath="/CovidData"  rest="true" {
             required string end_date restargsource="Path",
             required string county_list restargsource="Path",
             ) httpmethod="GET" restpath="covid_sums/{start_date}&{end_date}&{county_list}"
-    { // Quite the function declaration syntax
+    {
       // URL is: "http://localhost:8080/rest/metrics/CovidData/covidsums/{start_date}&{end_date}&{county_list}
+      // Dates are in YYYY-MM-DD format, fips_list is in ('00000', '12345')
+      // Leave fips_list as () to disable filtering
 
       // Generate SQL Query
       cffile(action="read", file="covid_sum_query.sql", variable="sql_query");
