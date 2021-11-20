@@ -44,7 +44,16 @@ li, span {
     font-size: 15px;
 }
 
+#ChartsPage{
+  padding:10%
+}
+
 #ChartsInput {
   display:flex;
   align-items:stretch;
+}
+
+canvas {
+  width: 50%;
+  padding: 30px;
 }

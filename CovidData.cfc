@@ -18,7 +18,7 @@ component restpath="/CovidData"  rest="true" {
     }
 
     remote string function getCovidData() httpmethod="GET" restpath="test" {
-      sql_query = "SELECT TOP 10 * FROM covid_data";
+      sql_query = "SELECT TOP 100 * FROM covid_data";
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
       record_count = myQuery.recordcount;
       query_string = SerializeJSON(myQuery, false);

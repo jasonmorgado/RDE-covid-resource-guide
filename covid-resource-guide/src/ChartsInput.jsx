@@ -5,7 +5,11 @@ import { Multiselect } from 'multiselect-react-dropdown';
 function ChartsInput(){
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
   var location_data = {
-      county_list: [{name: 'Bergen', id: 1, state:"New Jersey"},{name: 'Essex', id: 2, state:"New Jersey"}, {name:"Albany", id:3, state:"New York"}]
+      county_list: [
+        {name: 'Bergen', id: 1, state:"New Jersey"}, {name: 'Essex', id: 2, state:"New Jersey"},
+        {name:"Albany", id:3, state:"New York"}, {name:"Bronx", id:4, state:"New York"},
+        {name:"Fairfield", id:5, state:"Connecticut"}, {name:"Hartford", id:6, state:"Connecticut"}
+      ]
   };
 
   var metric_data = {
