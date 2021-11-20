@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import DatePicker from 'react-date-picker';
 import { Multiselect } from 'multiselect-react-dropdown';
 
-function ChartsInput(){
+function ChartsInput(props){
+  // Function to pass data up
+  var passInputData = props.passInputData;
+  var passCountyList = props.setCountyList;
+  var passStartDate = props.setStartDate;
+  var passEndDate = props.setEndDate;
+
+  // Local Data
+  var inputData = props.inputData;
+
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
   var location_data = {
       county_list: [
@@ -22,10 +31,14 @@ function ChartsInput(){
 
   function onSelectCounty(selectedList, selectedItem) {
     console.log("Selected:"+selectedItem.name);
+    passCountyList(selectedList.slice());
   }
 
   function onRemoveCounty(selectedList, removedItem){
     console.log("Removed:"+removedItem.name);
+    passCountyList(selectedList.slice());
+    // inputData.countyList = selectedList;
+    // passInputData(inputData); // Reloads the page for some reason
   }
 
 
@@ -39,8 +52,22 @@ function ChartsInput(){
   // https://github.com/wojtekmaj/react-date-picker
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  function onChangeStartDate(newDate){
+    setStartDate(newDate); // For Calendar Input
+    // Passing state in useEffect now
+  }
 
-
+  function onChangeEndDate(newDate){
+    setEndDate(newDate);
+    // Passing state in useEffect now
+  }
+  useEffect(() => {
+      let startDateString = startDate.toISOString().split("T")[0];
+      let endDateString = endDate.toISOString().split("T")[0];
+      passStartDate(startDateString);
+      passEndDate(endDateString);
+      console.log("loaded chartsinput");
+   });
   return (
     <div id="ChartsInput">
 
@@ -65,11 +92,11 @@ function ChartsInput(){
 
     />
     <DatePicker
-      onChange={setStartDate}
+      onChange={onChangeStartDate}
       value={startDate}
     />
     <DatePicker
-      onChange={setEndDate}
+      onChange={onChangeEndDate}
       value={endDate}
     />
 
