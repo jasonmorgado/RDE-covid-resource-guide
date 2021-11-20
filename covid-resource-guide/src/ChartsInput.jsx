@@ -37,8 +37,8 @@ function ChartsInput(){
 
 
   // https://github.com/wojtekmaj/react-date-picker
-  const [startDate, onChangeStartDate] = useState(new Date());
-  const [endDate, onChangeEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
 
   return (
@@ -49,27 +49,27 @@ function ChartsInput(){
       selectedValues={location_data.selectedValue} // Preselected value to persist in dropdown
       onSelect={onSelectCounty} // Function will trigger on select event
       onRemove={onRemoveCounty} // Function will trigger on remove event
-      displayValue="name" // Property name to display in the dropdown options
-      groupBy="state"
-      showCheckbox="true"
-      closeOnSelect="false"
+      displayValue={"name"} // Property name to display in the dropdown options
+      groupBy={"state"}
+      showCheckbox={true}
+      closeOnSelect={false}
     />
     <Multiselect
       options={metric_data.metric_options} // Options to display in the dropdown
       selectedValues={metric_data.selectedValue} // Preselected value to persist in dropdown
       onSelect={onSelectMetric} // Function will trigger on select event
-      displayValue="name" // Property name to display in the dropdown options
-      showCheckbox="false"
-      closeOnSelect="true"
-      singleSelect="true"
+      displayValue={"name"} // Property name to display in the dropdown options
+      showCheckbox={false}
+      closeOnSelect={true}
+      singleSelect={true}
 
     />
     <DatePicker
-      onChange={onChangeStartDate}
+      onChange={setStartDate}
       value={startDate}
     />
     <DatePicker
-      onChange={onChangeEndDate}
+      onChange={setEndDate}
       value={endDate}
     />
 
