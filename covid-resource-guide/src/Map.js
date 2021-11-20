@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import shapes from './tristate_county_shapes.json';
+//import DatePicker from 'react-date-picker';
 
 require('dotenv').config();
 
@@ -19,79 +20,111 @@ export default function App() {
   const [cases, setCases] = useState([]);
   const [deaths, setDeaths] = useState([]);
   const [recoveries, setRecoveries] = useState([]);
+  
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
 
+  //const county = [];
+  //const state = [];
+
+  const [startDate, onChangeStartDate] = useState(new Date());
+  const [endDate, onChangeEndDate] = useState(new Date());
+
 
   function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
+    return d > 140 ? '#800026' :
+           d > 120  ? '#BD0026' :
+           d > 100  ? '#E31A1C' :
+           d > 80  ? '#FC4E2A' :
+           d > 60   ? '#FD8D3C' :
+           d > 40   ? '#FEB24C' :
+           d > 20   ? '#FED976' :
                       '#FFEDA0';
   }
   
   function getindex(countyid, stateid){
-  
     let index = 0;
-  
+    //console.log(countyid);
+    //console.log(stateid);
+    //console.log(county);
+
     for(let i = 0; i < county.length; i++){
-            
       if(county[i] === countyid){
         if(state[i] === stateid){
           index = i;
-          console.log("index = " + index);
-          console.log("County id = " + county[i]);
-          console.log("State id = " + state[i]);
-          console.log("cases = " + cases[index]);
+          //console.log(index);
+          //console.log(cases[i]);
           return index;
         }
-        console.log("Stateid not matching");
-      }
-
-      else{
-        console.log("Not found");
       }
     }
+    //console.log("No match found");
+    return
   }
 
   function getdata(){
-    fetch("http://localhost:8080/rest/metrics/CovidData/test")
+    fetch("http://localhost:8080/rest/metrics/CovidData/covid_sums/%272021-10-05%27&%272021-10-05%27&()")
       .then(response => response.json())
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
 
           let data_rows = json_data.DATA;
+          const fips = data_rows.FIPS;
           
-          for (let i = 0; i < data_rows.length; i++) {
-            setCases((oldArray => [...oldArray, data_rows[i][2]]));         //daily cases
-            setRecoveries((oldArray => [...oldArray, data_rows[i][6]]));    //daily recoveries
-            setRecoveries((oldArray => [...oldArray, data_rows[i][4]]));    //daily deaths
-            
-            let x = String(data_rows[i][0]).slice(0,2);
-            let y = String(data_rows[i][0]).slice(2);
+          for (let i = 0; i < fips.length; i++) {
 
-            setState((oldArray => [...oldArray, x]));    //county id
-            setCounty((oldArray => [...oldArray, y]));    //state id
+            let x = String(fips[i].slice(0,2));
+            let y = String(fips[i].slice(2));
+
+            //state.push(x);
+            //county.push(y);
+            setState(prevArray => [...prevArray, x]);
+            setCounty(prevArray => [...prevArray, y]);
           }
-
+          
+          //console.log(county);
+          setCases(data_rows.SUM_CASES);
+          setRecoveries(data_rows.SUM_RECOVERIES);
+          setDeaths(data_rows.SUM_DEATHS);
           setIsLoaded(true);
-          console.log(data_rows);
           return;
         },
         (error) => {
-          setIsLoaded(true);
+          setIsLoaded(false);
           setError(error);
           return;
         }
       )
   }
 
+  function style(feature) {
+    const countyid = feature.properties.COUNTY;
+    const stateid = feature.properties.STATE;
+        
+    let i = getindex(countyid, stateid);
+    console.log("cases");
+    console.log(cases[i]);
+    
+    return {
+        fillColor: getColor(cases[i]),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
   useEffect(() => {
+    
+    if(data === false){
+      getdata();
+      setData(true);
+    }
+    
+    //console.log(cases);
+
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v10',
@@ -100,87 +133,61 @@ export default function App() {
     });
 
     //Getting the shapes of the county from mapbox studio 
-    map.on('load', () => {
+    map.on('load', async () => {
 
-      map.addSource('shapes', {
+      /*map.addSource('shapes', {
         'type': 'geojson',
         'data': shapes
-      });
-
-      /*
-      map.addSource('county_shapes', {
-        type: 'vector',
-        url: 'mapbox://shail7777.b5zhf6am'
       });*/
 
-      
-      if(data === false){
-        getdata();
-        setData(true);
-      }
-      console.log(state);
-
-      
-      /*
-      //adding layer of county shapes into the map
-      map.addLayer({
-        'id': 'county-layer',
-        'type': 'fill',
-        'source': 'county_shapes',
-        'source-layer': 'tristate_county_shapes-19hgor',
-        'layout': {},
-        'paint': {
-          'fill-color': '#0080ff', 
-          'fill-opacity': 0.5
-          }
-      });
-
-      //adding a outline around each county
-      map.addLayer({
-        'id': 'outline',
-        'type': 'line',
-        'source': 'county_shapes',
-        'source-layer': 'tristate_county_shapes-19hgor',
-        'layout': {},
-        'paint': {
-        'line-color': '#000',
-        'line-width': 2
-        }
-      });*/
-      //console.log(county_shapes);
-      for (const feature of shapes.features) {
-        const countyid = feature.properties.COUNTY;
-        const stateid = feature.properties.STATE;
+      if(isLoaded === true){
+        for (const feature of shapes.features) {
+          const countyid = feature.properties.COUNTY;
+          const stateid = feature.properties.STATE;
         
-        //console.log("Name : " + feature.properties.NAME);
-        //console.log("County id : " +  countyid);
-        console.log("State id : " +  stateid);
 
-        let i = getindex(countyid, stateid);
+          let i = getindex(countyid, stateid);
+          //console.log("cases");
+          //console.log(cases[i]);
+          let color = getColor(cases[i]);
+          //console.log(color);
 
-        map.addLayer({
-          'id': stateid + countyid,
-          'type': 'fill',
-          'source': 'shapes',
-          'layout': {},
-          'paint': {
-            'fill-color': '#0080ff', 
-            'fill-opacity': 0.5
+          let source = stateid + countyid;
+
+          map.addSource(source, {
+            type: "geojson",
+              data: {
+                  "type": "Feature",
+                  "geometry": {
+                    "type": "Polygon",
+                    "coordinates": feature.geometry.coordinates,
+                  }
+              }
+          });
+
+          map.addLayer({
+            'id': stateid + countyid + "_shape",
+            'type': 'fill',
+            'source': source,
+            'layout': {},
+            'paint': {
+              'fill-color': color, 
+              'fill-opacity': 0.5
+              }
+          });
+
+          map.addLayer({
+            'id': stateid + countyid + "_outline",
+            'type': 'line',
+            'source': sou,
+            'layout': {},
+            'paint': {
+              'line-color': '#000',
+              'line-width': 2
             }
-        });
-
-        map.addLayer({
-          'id': stateid + countyid + "_outline",
-          'type': 'line',
-          'source': 'shapes',
-          'layout': {},
-          'paint': {
-            'line-color': '#000',
-            'line-width': 2
-          }
-        });
+          });
+        }
       }
-      
     });
 
     map.on('mousemove', (event) => {
@@ -195,28 +202,18 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
-          //console.log(county_name);
           document.getElementById('name').innerHTML = county_name;
           }
-        //else{
-          //console.log("undefined");
-        //}
       });
     });
   });
 
-  /*if (error) {
-    return <div>Error: {error.message}</div>;
-  } 
-  else if (!isLoaded) {
-    return <div>Loading...</div>;
-  } 
-  else {*/
     return (
-      <div>
-        <div className="sidebar" id="name"></div>
-        <div ref={mapContainer} className="map-container" />
-      </div>
+      
+          <div>
+            <div className="sidebar" id="name"></div>
+            <div ref={mapContainer} className="map-container" />
+          </div>
+       
     );
-  //}
 }

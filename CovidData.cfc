@@ -56,7 +56,7 @@ component restpath="/CovidData"  rest="true" {
 
       // Get rows
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
-      query_string = SerializeJSON(myQuery, false);
+      query_string = SerializeJSON(myQuery, true);
 
       // CORS header
       cfheader(name="Access-Control-Allow-Origin", value="*");
