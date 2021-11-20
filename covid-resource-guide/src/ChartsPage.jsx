@@ -6,27 +6,15 @@ import { useState, useEffect} from 'react';
 
 function ChartsPage(){
 
-  //const [data, setData] = useState('No changes detected.');
-  // const [numCounties, setNum] = useState(0);
-  const [inputData, setInputData] = useState({
-      countyList:[],
-      startDate:"2021-10-04",
-      endDate:"2021-10-4",
-  });
+  // Data from Inputs
   const [countyList, setCountyList] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [metric, setMetric] = useState("Daily Cases");
 
-  const passInputData = (inputData) => {
-    setInputData(inputData) //For dates
-    // setNum(inputData.countyList.length); // For countylist Len
-    console.log("Updated input data");
-    console.log(inputData.startDate);
-    console.log(countyList)
-  }
   useEffect(() => {
       // Call API
+      // fetch("http://localhost:8080/rest/metrics/CovidData/test")
       // Update Visual Elements
       console.log("loaded chartspage");
    });
@@ -37,8 +25,6 @@ function ChartsPage(){
         <p>StartDate:{startDate}</p>
         <p>EndDate:{endDate}</p>
         <ChartsInput
-          passInputData={passInputData}
-          inputData={inputData}
           setCountyList={setCountyList}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
