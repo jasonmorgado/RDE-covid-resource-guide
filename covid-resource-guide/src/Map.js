@@ -1,21 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import shapes from './tristate_county_shapes.json';
 
 require('dotenv').config();
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhaWw3Nzc3IiwiYSI6ImNrdm4zeGF2dDM5OXAzMHFmNTB2YnkyY20ifQ.QwWqhWiCOf6uC5r5fVYMPg';
 //console.log(process.env);
-
-function getColor(d) {
-  return d > 1000 ? '#800026' :
-         d > 500  ? '#BD0026' :
-         d > 200  ? '#E31A1C' :
-         d > 100  ? '#FC4E2A' :
-         d > 50   ? '#FD8D3C' :
-         d > 20   ? '#FEB24C' :
-         d > 10   ? '#FED976' :
-                    '#FFEDA0';
-}
 
 export default function App() {
   var county_name;
@@ -31,6 +21,42 @@ export default function App() {
   const [recoveries, setRecoveries] = useState([]);
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
+
+
+  function getColor(d) {
+    return d > 1000 ? '#800026' :
+           d > 500  ? '#BD0026' :
+           d > 200  ? '#E31A1C' :
+           d > 100  ? '#FC4E2A' :
+           d > 50   ? '#FD8D3C' :
+           d > 20   ? '#FEB24C' :
+           d > 10   ? '#FED976' :
+                      '#FFEDA0';
+  }
+  
+  function getindex(countyid, stateid){
+  
+    let index = 0;
+  
+    for(let i = 0; i < county.length; i++){
+            
+      if(county[i] === countyid){
+        if(state[i] === stateid){
+          index = i;
+          console.log("index = " + index);
+          console.log("County id = " + county[i]);
+          console.log("State id = " + state[i]);
+          console.log("cases = " + cases[index]);
+          return index;
+        }
+        console.log("Stateid not matching");
+      }
+
+      else{
+        console.log("Not found");
+      }
+    }
+  }
 
   function getdata(){
     fetch("http://localhost:8080/rest/metrics/CovidData/test")
@@ -75,20 +101,32 @@ export default function App() {
 
     //Getting the shapes of the county from mapbox studio 
     map.on('load', () => {
-      map.addSource('county-shapes', {
-        type: 'vector',
-        url: 'mapbox://shail7777.b5zhf6am'
+
+      map.addSource('shapes', {
+        'type': 'geojson',
+        'data': shapes
       });
 
+      /*
+      map.addSource('county_shapes', {
+        type: 'vector',
+        url: 'mapbox://shail7777.b5zhf6am'
+      });*/
+
+      
       if(data === false){
         getdata();
         setData(true);
       }
+      console.log(state);
+
+      
+      /*
       //adding layer of county shapes into the map
       map.addLayer({
         'id': 'county-layer',
         'type': 'fill',
-        'source': 'county-shapes',
+        'source': 'county_shapes',
         'source-layer': 'tristate_county_shapes-19hgor',
         'layout': {},
         'paint': {
@@ -101,14 +139,47 @@ export default function App() {
       map.addLayer({
         'id': 'outline',
         'type': 'line',
-        'source': 'county-shapes',
+        'source': 'county_shapes',
         'source-layer': 'tristate_county_shapes-19hgor',
         'layout': {},
         'paint': {
         'line-color': '#000',
-        'line-width': 3
+        'line-width': 2
         }
-      });
+      });*/
+      //console.log(county_shapes);
+      for (const feature of shapes.features) {
+        const countyid = feature.properties.COUNTY;
+        const stateid = feature.properties.STATE;
+        
+        //console.log("Name : " + feature.properties.NAME);
+        //console.log("County id : " +  countyid);
+        console.log("State id : " +  stateid);
+
+        let i = getindex(countyid, stateid);
+
+        map.addLayer({
+          'id': stateid + countyid,
+          'type': 'fill',
+          'source': 'shapes',
+          'layout': {},
+          'paint': {
+            'fill-color': '#0080ff', 
+            'fill-opacity': 0.5
+            }
+        });
+
+        map.addLayer({
+          'id': stateid + countyid + "_outline",
+          'type': 'line',
+          'source': 'shapes',
+          'layout': {},
+          'paint': {
+            'line-color': '#000',
+            'line-width': 2
+          }
+        });
+      }
       
     });
 
