@@ -34,6 +34,32 @@ component restpath="/CovidData"  rest="true" {
       return query_string;
     }
 
+    remote string function getCounties()
+    httpmethod="GET" restpath="counties/"
+    {
+      county_data_file = FileOpen("CountyList.txt", "read");
+      county_list = []
+      while (NOT FileisEOF(county_data_file)){
+        line = FileReadLine(county_data_file);
+        line_data = listToArray(line, ',');
+        county_data = StructNew();
+
+        county_data.fips = line_data[1];
+        county_data.county = line_data[2];
+        county_data.state = line_data[3];
+
+        county_list.append(county_data)
+    }
+    //dict = {county_list=county_list}
+    returnVal = SerializeJSON(county_list);
+
+    // CORS header
+    cfheader(name="Access-Control-Allow-Origin", value="*");
+
+    return returnVal;
+  }
+
+
     remote string function getCovidSums(
             required string start_date restargsource="Path",
             required string end_date restargsource="Path",
