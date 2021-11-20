@@ -1,6 +1,9 @@
 component restpath="/CovidData"  rest="true" {
     // Test API function, returns the server's OS
     remote struct function getOS() httpmethod="GET" restpath="os" {
+      // CORS header
+      cfheader(name="Access-Control-Allow-Origin", value="*");
+
         return server.os;
     }
 
@@ -49,7 +52,7 @@ component restpath="/CovidData"  rest="true" {
         county_data.state = line_data[3];
 
         county_list.append(county_data)
-    }
+      }
     //dict = {county_list=county_list}
     returnVal = SerializeJSON(county_list);
 
