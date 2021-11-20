@@ -32,7 +32,7 @@ function getTable(rows){
 
 }
 
-function AjaxComponent() {
+function CovidDataTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [rows, setRows] = useState([]);
@@ -68,4 +68,4 @@ function AjaxComponent() {
   }
 }
 
-export default AjaxComponent;
+export default CovidDataTable;
