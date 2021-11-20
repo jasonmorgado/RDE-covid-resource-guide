@@ -13,7 +13,18 @@ function getTable(rows){
         <td>{row[6]}</td>
       </tr>
     );
-    const table = (<table>{table_rows}</table>)
+    const table = (
+      <table>
+        <tr>
+          <td>FIPS</td>
+          <td>Date</td>
+          <td>Cases</td>
+          <td>Deaths</td>
+          <td>Recoveries</td>
+        </tr>
+        {table_rows}
+      </table>
+    )
     return table
   }else{
     return <div>Loading table...</div>
@@ -21,7 +32,7 @@ function getTable(rows){
 
 }
 
-function AjaxComponent() {
+function CovidDataTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [rows, setRows] = useState([]);
@@ -57,4 +68,4 @@ function AjaxComponent() {
   }
 }
 
-export default AjaxComponent;
+export default CovidDataTable;
