@@ -50,12 +50,13 @@ function ChartsInput(props){
   const [endDate, setEndDate] = useState(new Date());
   function onChangeStartDate(newDate){
     setStartDate(newDate); // For Calendar Input
-    passStartDate(startDate.toISOString().split("T")[0]);
+    passStartDate(newDate.toISOString().split("T")[0]);
   }
 
   function onChangeEndDate(newDate){
     setEndDate(newDate);
-    passEndDate(endDate.toISOString().split("T")[0]);
+    passEndDate(newDate.toISOString().split("T")[0]);
+
   }
 
   function getCountyList(){
