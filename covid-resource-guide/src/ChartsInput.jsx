@@ -4,21 +4,18 @@ import { Multiselect } from 'multiselect-react-dropdown';
 
 function ChartsInput(props){
   // Function to pass data up
-  var passInputData = props.passInputData;
   var passCountyList = props.setCountyList;
   var passStartDate = props.setStartDate;
   var passEndDate = props.setEndDate;
-
-  // Local Data
-  var inputData = props.inputData;
+  var passMetric = props.setMetric;
 
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
+
+  const [countyList, setCountyList] = useState([
+    {"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"},
+  ]);
   var location_data = {
-      county_list: [
-        {name: 'Bergen', id: 1, state:"New Jersey"}, {name: 'Essex', id: 2, state:"New Jersey"},
-        {name:"Albany", id:3, state:"New York"}, {name:"Bronx", id:4, state:"New York"},
-        {name:"Fairfield", id:5, state:"Connecticut"}, {name:"Hartford", id:6, state:"Connecticut"}
-      ]
+      county_list: countyList,
   };
 
   var metric_data = {
@@ -30,15 +27,13 @@ function ChartsInput(props){
   }
 
   function onSelectCounty(selectedList, selectedItem) {
-    console.log("Selected:"+selectedItem.name);
+    console.log("Selected:"+selectedItem.FIPS);
     passCountyList(selectedList.slice());
   }
 
   function onRemoveCounty(selectedList, removedItem){
     console.log("Removed:"+removedItem.name);
     passCountyList(selectedList.slice());
-    // inputData.countyList = selectedList;
-    // passInputData(inputData); // Reloads the page for some reason
   }
 
 
@@ -46,6 +41,7 @@ function ChartsInput(props){
   // Metric Dropdown
   function onSelectMetric(selectedList, selectedItem) {
     console.log("Selected:"+selectedItem.name);
+    passMetric(selectedItem.name);
   }
 
 
@@ -54,20 +50,39 @@ function ChartsInput(props){
   const [endDate, setEndDate] = useState(new Date());
   function onChangeStartDate(newDate){
     setStartDate(newDate); // For Calendar Input
-    // Passing state in useEffect now
+    passStartDate(startDate.toISOString().split("T")[0]);
   }
 
   function onChangeEndDate(newDate){
     setEndDate(newDate);
-    // Passing state in useEffect now
+    passEndDate(endDate.toISOString().split("T")[0]);
   }
+
+  function getCountyList(){
+    fetch("http://localhost:8080/rest/metrics/CovidData/counties")
+      .then(response => response.json())
+      .then(
+        (json_string) => {
+          let json_data = JSON.parse(json_string);
+          // console.log(json_data);
+          setCountyList(json_data);
+          // let data_rows = json_data.DATA;
+          // setRows(data_rows);
+        }
+      )
+  }
+
   useEffect(() => {
-      let startDateString = startDate.toISOString().split("T")[0];
-      let endDateString = endDate.toISOString().split("T")[0];
-      passStartDate(startDateString);
-      passEndDate(endDateString);
-      console.log("loaded chartsinput");
-   });
+    // Now runs once
+    // Pass up current Input Data
+    let startDateString = startDate.toISOString().split("T")[0];
+    let endDateString = endDate.toISOString().split("T")[0];
+    passStartDate(startDateString);
+    passEndDate(endDateString);
+    // Fetch County list
+    getCountyList();
+    console.log("loaded chartsinput");
+   }, []);
   return (
     <div id="ChartsInput">
 
@@ -76,8 +91,8 @@ function ChartsInput(props){
       selectedValues={location_data.selectedValue} // Preselected value to persist in dropdown
       onSelect={onSelectCounty} // Function will trigger on select event
       onRemove={onRemoveCounty} // Function will trigger on remove event
-      displayValue={"name"} // Property name to display in the dropdown options
-      groupBy={"state"}
+      displayValue={"COUNTY"} // Property name to display in the dropdown options
+      groupBy={"STATE"}
       showCheckbox={true}
       closeOnSelect={false}
     />

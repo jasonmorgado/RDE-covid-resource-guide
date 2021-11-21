@@ -14,17 +14,17 @@
 34035,Somerset,New Jersey
 34037,Sussex,New Jersey
 34039,Union,New Jersey
+36005,Bronx,New York
 36027,Dutchess,New York
+36047,Kings,New York
 36059,Nassau,New York
+36061,New York,New York
 36071,Orange,New York
 36079,Putnam,New York
+36081,Queens,New York
+36085,Richmond,New York
 36087,Rockland,New York
 36103,Suffolk,New York
 36111,Ulster,New York
 36119,Westchester,New York
-36005,Bronx,New York
-36047,Kings,New York
-36061,New York,New York
-36085,Richmond,New York
-36081,Queens,New York
 42103,Pike,Pennsylvania
