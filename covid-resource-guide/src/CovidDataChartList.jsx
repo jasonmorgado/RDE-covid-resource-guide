@@ -5,8 +5,7 @@ function getCharts(props){
   var countyList = props.countyList;
   var startDate = props.startDate;
   var endDate = props.endDate;
-  console.log(typeof countyList)
-  console.log(countyList)
+  var metrics = props.metrics;
 
   if (Array.isArray(countyList)){
     return countyList.map((countyData) =>
@@ -16,6 +15,7 @@ function getCharts(props){
         countyName={countyData.COUNTY}
         startDate={startDate}
         endDate={endDate}
+        metrics={metrics}
       />
     );
   }else{

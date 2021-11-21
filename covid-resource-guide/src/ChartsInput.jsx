@@ -7,22 +7,22 @@ function ChartsInput(props){
   const passCountyList = props.setCountyList;
   const passStartDate = props.setStartDate;
   const passEndDate = props.setEndDate;
-  const passMetric = props.setMetric;
+  const passMetrics = props.setMetrics;
 
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
-
   const [countyList, setCountyList] = useState([
     {"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"},
   ]);
   var location_data = {
       county_list: countyList,
+      selectedValues: [countyList[0]]
   };
 
   var metric_data = {
     metric_options: [
-      {id:1, name: "Daily Cases"}, {id:2, name:"Total Cases"},
-      {id:3, name: "Daily Deaths"}, {id:4, name:"Total Deaths"},
-      {id:5, name: "Daily Recoveries"}, {id:6, name:"Total Recoveries"},
+      {id:0, name: "Daily Cases"}, {id:1, name:"Total Cases"},
+      {id:2, name: "Daily Deaths"}, {id:3, name:"Total Deaths"},
+      {id:4, name: "Daily Recoveries"}, {id:5, name:"Total Recoveries"},
     ]
   }
 
@@ -40,8 +40,10 @@ function ChartsInput(props){
 
   // Metric Dropdown
   function onSelectMetric(selectedList, selectedItem) {
-    console.log("Selected:"+selectedItem.name);
-    passMetric(selectedItem.name);
+    passMetrics(selectedList.slice());
+  }
+  function onRemoveMetric(selectedList, removedItem) {
+    passMetrics(selectedList.slice());
   }
 
 
@@ -84,10 +86,12 @@ function ChartsInput(props){
     getCountyList();
     console.log("loaded chartsinput");
   }, [startDate, endDate, passStartDate, passEndDate]);
+  // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
+
   return (
     <div id="ChartsInput">
 
-    <Multiselect
+    <Multiselect // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
       options={location_data.county_list} // Options to display in the dropdown
       selectedValues={location_data.selectedValue} // Preselected value to persist in dropdown
       onSelect={onSelectCounty} // Function will trigger on select event
@@ -100,12 +104,11 @@ function ChartsInput(props){
     <Multiselect
       options={metric_data.metric_options} // Options to display in the dropdown
       selectedValues={metric_data.selectedValue} // Preselected value to persist in dropdown
-      onSelect={onSelectMetric} // Function will trigger on select event
+      onSelect={onSelectMetric}
+      onRemove={onRemoveMetric}
       displayValue={"name"} // Property name to display in the dropdown options
       showCheckbox={false}
       closeOnSelect={true}
-      singleSelect={true}
-
     />
     <DatePicker
       onChange={onChangeStartDate}
