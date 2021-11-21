@@ -3,11 +3,9 @@ import React, { useState, useEffect} from 'react';
 // From https://reactjs.org/docs/faq-ajax.html
 
 function getTable(rows){
-  console.log("getTable")
-  console.log(rows);
   if(rows){
     const table_rows = rows.map((row) =>
-      <tr key={row[2]}>
+      <tr key={row[0]}>
         <td>{row[0]}</td>
         <td>{row[1]}</td>
         <td>{row[2]}</td>
@@ -16,13 +14,17 @@ function getTable(rows){
     );
     const table = (
       <table>
-        <tr>
-          <td>FIPS</td>
-          <td>Cases</td>
-          <td>Deaths</td>
-          <td>Recoveries</td>
-        </tr>
-        {table_rows}
+        <thead>
+          <tr>
+            <td>FIPS</td>
+            <td>Sum Cases</td>
+            <td>Sum Deaths</td>
+            <td>Sum Recoveries</td>
+          </tr>
+        </thead>
+        <tbody>
+          {table_rows}
+        </tbody>
       </table>
     )
     return table
@@ -60,7 +62,6 @@ function CovidDataTable(props) {
   }, [startDate]);
   useEffect(() => {
     // Reformat countyList
-    console.log("Calling useeffect");
     let fips_list = formatSQLArray(countyList);
     let parameters = "'" + startDate + "'&'" + endDate + "'&" + fips_list;
     console.log(parameters);
@@ -68,21 +69,22 @@ function CovidDataTable(props) {
     console.log(URI);
     // URI Confirmed working
     fetch(URI)
-      .then(response => response.json())
-      .then(
-        (json_string) => {
-          let json_data = JSON.parse(json_string);
-          let data_rows = json_data.DATA;
-          console.log("datarows");
-          console.log(json_data);
-          setIsLoaded(true);
-          setRows(data_rows);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+    .then(response => response.json())
+    .then(
+      (json_string) => {
+        let json_data = JSON.parse(json_string);
+        let data_rows = json_data.DATA;
+        console.log("datarows");
+        console.log(json_data);
+        setIsLoaded(true);
+        setRows(data_rows);
+      },
+      (error) => {
+        setIsLoaded(true);
+        setError(error);
+      }
+    )
+
   }, [startDate, endDate, countyList]);
 
   if (error) {

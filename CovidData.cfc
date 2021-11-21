@@ -93,6 +93,30 @@ component restpath="/CovidData"  rest="true" {
       return query_string
     }
 
+    remote string function getChartData(
+        required string start_date restargsource="Path",
+        required string end_date restargsource="Path",
+        required string county_list restargsource="Path",
+    ) httpmethod="GET" restpath="chart_data/{start_date}&{end_date}&{county_list}"
+    {
+      cffile(action="read", file="covid_chart_query.sql", variable="sql_query");
+      sql_query = Replace(sql_query, "{START_DATE}", start_date);
+      sql_query = Replace(sql_query, "{END_DATE}", end_date);
+
+      // If we passed a non-empty county_list, filter by that too
+      if (county_list != "()"){
+        sql_query = Replace(sql_query, "1=1", "covid_data.fips IN " & county_list);
+      }
+
+      // Get rows
+      myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+      query_string = SerializeJSON(myQuery, true);
+
+      // CORS header
+      cfheader(name="Access-Control-Allow-Origin", value="*");
+      return query_string
+    }
+
     remote string function getHeatmapSums(
             required string start_date restargsource="Path",
             required string end_date restargsource="Path",
