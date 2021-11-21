@@ -10,6 +10,7 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhaWw3Nzc3IiwiYSI6ImNrdm4zeGF2dDM5OXAzMHFmN
 
 export default function App() {
   var county_name;
+  var display_data;
   const mapContainer = useRef(null);
   const lng = (-74.0483);
   const lat = (40.3046);
@@ -24,13 +25,11 @@ export default function App() {
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
 
-  //const county = [];
-  //const state = [];
-
   const [startDate, onChangeStartDate] = useState(new Date());
   const [endDate, onChangeEndDate] = useState(new Date());
 
 
+  //Calculate the color for layer according to the argument d
   function getColor(d) {
     return d > 140 ? '#800026' :
            d > 120  ? '#BD0026' :
@@ -42,28 +41,23 @@ export default function App() {
                       '#FFEDA0';
   }
   
+  //Find which index is county data is stored in the array 
   function getindex(countyid, stateid){
     let index = 0;
-    //console.log(countyid);
-    //console.log(stateid);
-    //console.log(county);
-
     for(let i = 0; i < county.length; i++){
       if(county[i] === countyid){
         if(state[i] === stateid){
           index = i;
-          //console.log(index);
-          //console.log(cases[i]);
           return index;
         }
       }
     }
-    //console.log("No match found");
     return
   }
 
+  //Getting data from the database 
   function getdata(){
-    fetch("http://localhost:8080/rest/metrics/CovidData/covid_sums/%272021-10-05%27&%272021-10-05%27&()")
+    fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'2021-10-10'&'2021-10-10'")
       .then(response => response.json())
       .then(
         (json_string) => {
@@ -72,18 +66,9 @@ export default function App() {
           let data_rows = json_data.DATA;
           const fips = data_rows.FIPS;
           
-          for (let i = 0; i < fips.length; i++) {
-
-            let x = String(fips[i].slice(0,2));
-            let y = String(fips[i].slice(2));
-
-            //state.push(x);
-            //county.push(y);
-            setState(prevArray => [...prevArray, x]);
-            setCounty(prevArray => [...prevArray, y]);
-          }
-          
-          //console.log(county);
+          console.log(data_rows);
+          setCounty(data_rows.COUNTY_CODE);
+          setState(data_rows.STATE_CODE);
           setCases(data_rows.SUM_CASES);
           setRecoveries(data_rows.SUM_RECOVERIES);
           setDeaths(data_rows.SUM_DEATHS);
@@ -98,33 +83,14 @@ export default function App() {
       )
   }
 
-  function style(feature) {
-    const countyid = feature.properties.COUNTY;
-    const stateid = feature.properties.STATE;
-        
-    let i = getindex(countyid, stateid);
-    console.log("cases");
-    console.log(cases[i]);
-    
-    return {
-        fillColor: getColor(cases[i]),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
-
   useEffect(() => {
     
     if(data === false){
       getdata();
       setData(true);
     }
-    
-    //console.log(cases);
 
+    //Creatinng the map
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v10',
@@ -132,39 +98,42 @@ export default function App() {
       zoom: zoom
     });
 
-    //Getting the shapes of the county from mapbox studio 
+    
     map.on('load', async () => {
 
-      /*map.addSource('shapes', {
-        'type': 'geojson',
-        'data': shapes
-      });*/
-
+      //Checking if data from database is loaded 
       if(isLoaded === true){
+        //Looping through the json file
         for (const feature of shapes.features) {
           const countyid = feature.properties.COUNTY;
           const stateid = feature.properties.STATE;
-        
+          const county_name = feature.properties.NAME;
+          let source;
 
-          let i = getindex(countyid, stateid);
-          //console.log("cases");
-          //console.log(cases[i]);
+          let i = getindex(countyid, stateid);        
           let color = getColor(cases[i]);
-          //console.log(color);
+          let county_cases = cases[i];
 
-          let source = stateid + countyid;
+          //If county data is found in the databse 
+          if(i){
+            source = stateid + countyid + "&" + county_cases;
+          }
+          //No county data is found 
+          else{
+            source = stateid + countyid + "&" + 0;
+          }
 
+          //Adding the source from which the layer will be created 
           map.addSource(source, {
             type: "geojson",
-              data: {
-                  "type": "Feature",
-                  "geometry": {
-                    "type": "Polygon",
-                    "coordinates": feature.geometry.coordinates,
-                  }
-              }
+            data: {
+              "type": "Feature",
+              "properties": feature.properties,
+              "geometry": feature.geometry,
+            }
           });
 
+          //Adding the layer to the map
           map.addLayer({
             'id': stateid + countyid + "_shape",
             'type': 'fill',
@@ -176,10 +145,11 @@ export default function App() {
               }
           });
 
+          //Adding a outline around the layer
           map.addLayer({
             'id': stateid + countyid + "_outline",
             'type': 'line',
-            'source': sou,
+            'source': source,
             'layout': {},
             'paint': {
               'line-color': '#000',
@@ -190,19 +160,24 @@ export default function App() {
       }
     });
 
+    //When user moves mouse on a certain layer diaply the data of that county
     map.on('mousemove', (event) => {
       const county = map.queryRenderedFeatures(event.point);
-      const display = ['properties', 'state'];
+      const display = ['source', 'layer', 'properties',];
 
       const displayFeatures = county.map((feat) => {
         const displayFeat = {};
         display.forEach((prop) => {
           displayFeat[prop] = feat[prop];
         });
+        
+        var data = displayFeat.source;
+        data = data.split("&");
+        display_data = data[1];
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
-          document.getElementById('name').innerHTML = county_name;
+          document.getElementById('name').innerHTML = county_name + "<br>" + "Cases: " + display_data;
           }
       });
     });
@@ -211,8 +186,15 @@ export default function App() {
     return (
       
           <div>
-            <div className="sidebar" id="name"></div>
             <div ref={mapContainer} className="map-container" />
+
+            <div className="centerbar" id="options">
+              <button onclick="activateLasers()" className="button">Cases |</button>
+              <button onclick="activateLasers()" className="button">Recoveries |</button>
+              <button onclick="activateLasers()" className="button">Deaths</button>
+            </div>
+
+            <div className="sidebar" id="name"></div>
           </div>
        
     );
