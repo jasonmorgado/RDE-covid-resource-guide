@@ -72,7 +72,7 @@ component restpath="/CovidData"  rest="true" {
       // URL is: "http://localhost:8080/rest/metrics/CovidData/covidsums/{start_date}&{end_date}&{county_list}
       // Dates are in YYYY-MM-DD format, fips_list is in ('00000', '12345')
       // Leave fips_list as () to disable filtering
-      // Now the REST API for Covid Charts page
+      // Now the REST API for Covid Charts page' Table
 
       // Generate SQL Query
       cffile(action="read", file="covid_sum_query.sql", variable="sql_query");

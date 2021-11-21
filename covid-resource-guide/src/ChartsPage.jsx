@@ -1,7 +1,7 @@
 import './App.css';
 import ChartsInput from "./ChartsInput.jsx";
 import CovidDataChart from "./CovidDataChart.jsx";
-//import CovidDataTable from "./CovidDataTable.jsx";
+import CovidDataTable from "./CovidDataTable.jsx";
 import { useState, useEffect} from 'react';
 
 function ChartsPage(){
@@ -13,11 +13,9 @@ function ChartsPage(){
   const [metric, setMetric] = useState("Daily Cases");
 
   useEffect(() => {
-      // Call API
-      // fetch("http://localhost:8080/rest/metrics/CovidData/test")
-      // Update Visual Elements
-      console.log("loaded chartspage");
-   });
+    console.log("Updated metrics")
+  }, [countyList, startDate, endDate, metric]);
+
   return (
     <div id="ChartsPage">
       <header className="App-header">
@@ -28,8 +26,14 @@ function ChartsPage(){
           setCountyList={setCountyList}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
+          setMetric={setMetric}
         />
         <CovidDataChart/>
+        <CovidDataTable
+          startDate={startDate}
+          endDate={endDate}
+          countyList={countyList}
+        />
       </header>
     </div>
   );

@@ -4,10 +4,10 @@ import { Multiselect } from 'multiselect-react-dropdown';
 
 function ChartsInput(props){
   // Function to pass data up
-  var passCountyList = props.setCountyList;
-  var passStartDate = props.setStartDate;
-  var passEndDate = props.setEndDate;
-  var passMetric = props.setMetric;
+  const passCountyList = props.setCountyList;
+  const passStartDate = props.setStartDate;
+  const passEndDate = props.setEndDate;
+  const passMetric = props.setMetric;
 
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
 
@@ -83,7 +83,7 @@ function ChartsInput(props){
     // Fetch County list
     getCountyList();
     console.log("loaded chartsinput");
-   }, []);
+  }, [startDate, endDate, passStartDate, passEndDate]);
   return (
     <div id="ChartsInput">
 
