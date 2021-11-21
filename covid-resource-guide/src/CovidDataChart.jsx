@@ -114,7 +114,7 @@ function CovidDataChart(props){
       text: countyName
     },
   };
-
+  // Map Selected metrics to their datasets, put in graph
   for(let i = 0; i < metrics.length; i++){
     let metric = metrics[i];
     let metric_id = metric.id;
