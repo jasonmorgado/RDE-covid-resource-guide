@@ -17,10 +17,7 @@ function CovidDataChart(props){
         (json_string) => {
           let json_data = JSON.parse(json_string);
           let data_rows = json_data.DATA;
-          // setIsLoaded(true);
           setRows(data_rows);
-          console.log("got datarows:")
-          console.log(data_rows);
         }
       )
   }, [startDate, endDate, fips]);
@@ -76,9 +73,8 @@ function CovidDataChart(props){
     },
   ]
 
-  //var dataObject = JSON.parse(jsonString);
   var data = {
-      labels: rows.DATE, //List of dates
+      labels: rows.DATE,
       datasets : []
   };
   const legend = {

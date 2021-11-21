@@ -27,12 +27,10 @@ function ChartsInput(props){
   }
 
   function onSelectCounty(selectedList, selectedItem) {
-    console.log("Selected:"+selectedItem.FIPS);
     passCountyList(selectedList.slice());
   }
 
   function onRemoveCounty(selectedList, removedItem){
-    console.log("Removed:"+removedItem.name);
     passCountyList(selectedList.slice());
   }
 
@@ -67,10 +65,7 @@ function ChartsInput(props){
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
-          // console.log(json_data);
           setCountyList(json_data);
-          // let data_rows = json_data.DATA;
-          // setRows(data_rows);
         }
       )
   }
@@ -84,7 +79,6 @@ function ChartsInput(props){
     passEndDate(endDateString);
     // Fetch County list
     getCountyList();
-    console.log("loaded chartsinput");
   }, [startDate, endDate, passStartDate, passEndDate]);
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
 

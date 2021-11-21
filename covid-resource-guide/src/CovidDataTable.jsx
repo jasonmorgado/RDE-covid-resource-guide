@@ -1,9 +1,5 @@
 import React, { useState, useEffect} from 'react';
 
-// From https://reactjs.org/docs/faq-ajax.html
-
-
-
 function formatSQLArray(countyList){
   // Takes array countyList, returns string containing SQL formatted array
   var countyListString = "(";
@@ -63,7 +59,7 @@ function CovidDataTable(props) {
   }
   function getCountyList(){
     // Returns a list of object/dicts containing county data
-    // [{"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"}]
+    // Format: [{"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"}]
     fetch("http://localhost:8080/rest/metrics/CovidData/counties")
       .then(response => response.json())
       .then(
@@ -93,9 +89,7 @@ function CovidDataTable(props) {
     // Reformat countyList
     let fips_list = formatSQLArray(countyList);
     let parameters = "'" + startDate + "'&'" + endDate + "'&" + fips_list;
-    console.log(parameters);
     let URI = "http://localhost:8080/rest/metrics/CovidData/covid_sums/"+parameters;
-    console.log(URI);
     // URI Confirmed working
     fetch(URI)
     .then(response => response.json())
@@ -103,8 +97,6 @@ function CovidDataTable(props) {
       (json_string) => {
         let json_data = JSON.parse(json_string);
         let data_rows = json_data.DATA;
-        console.log("datarows");
-        console.log(json_data);
         setIsLoaded(true);
         setRows(data_rows);
       },

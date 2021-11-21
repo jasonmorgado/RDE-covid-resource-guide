@@ -25,9 +25,6 @@ function getCharts(props){
 }
 
 function CovidDataChartList(countyList){
-  console.log("Chartlistcountylist");
-  console.log(countyList);
-  console.log(countyList)
   return (
     <div>
     {getCharts(countyList)}

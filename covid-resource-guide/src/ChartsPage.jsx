@@ -43,5 +43,4 @@ function ChartsPage(){
     </div>
   );
 }
-// /        <CovidDataTable/>
 export default ChartsPage;
