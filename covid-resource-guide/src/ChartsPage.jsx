@@ -2,7 +2,7 @@ import './App.css';
 import ChartsInput from "./ChartsInput.jsx";
 import CovidDataChartList from "./CovidDataChartList";
 import CovidDataTable from "./CovidDataTable.jsx";
-import { useState, useEffect} from 'react';
+import { useState } from 'react';
 
 function ChartsPage(){
 
@@ -12,9 +12,6 @@ function ChartsPage(){
   const [endDate, setEndDate] = useState("");
   const [metrics, setMetrics] = useState([]);
 
-  useEffect(() => {
-    console.log("Updated metrics")
-  }, [countyList, startDate, endDate, metrics]);
 
   return (
     <div id="ChartsPage">

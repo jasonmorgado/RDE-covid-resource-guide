@@ -76,7 +76,7 @@ function CovidDataTable(props) {
   }, []);
   useEffect(() => {
     // Run when we have countyDataList
-    let tempCountyMap = countyMap;
+    let tempCountyMap = {};
     for (let i = 0; i < countyDataList.length - 1; i++){
       let countyData = countyDataList[i];
       let fips = countyData.FIPS;
