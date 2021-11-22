@@ -13,7 +13,8 @@ code {
 }
 
 .map-container {
-  height: 950px;
+  height: 660px;
+  width: 1440px;
 }
 
 .sidebar {
@@ -64,13 +65,14 @@ code {
 }
 
 .map-overlay {
-  width  : 150px;
+  width  : 170px;
   height : 275px;
   background: rgba(35, 55, 75, 0.9);
   color: white;
   font-family: monospace;
   position: fixed;
   align-items:stretch;
+  display: inline-block;
   left: 85%;
   bottom: 5%;
   z-index: 99;
@@ -91,6 +93,6 @@ code {
 }
 
 .date{
-  left: 80%;
-  top: 20%;
+  display: flex;
+  float: right;
 }

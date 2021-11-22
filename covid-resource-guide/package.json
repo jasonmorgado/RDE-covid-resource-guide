@@ -7,7 +7,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "chart.js": "^3.6.0",
-    "dotenv": "^10.0.0",
+    "ckey": "^1.0.3",
     "mapbox-gl": "^2.6.0",
     "multiselect-react-dropdown": "^2.0.7",
     "react": "^17.0.2",
@@ -32,5 +32,8 @@
     "not ie 11"
   ],
   "author": "Mapbox",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  }
 }

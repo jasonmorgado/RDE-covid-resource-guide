@@ -6,10 +6,8 @@ import { ListRecoveries } from './ListRecoveries';
 import { ListDeaths } from './ListDeaths';
 import DatePicker from 'react-date-picker';
 
-require('dotenv').config();
-
-mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhaWw3Nzc3IiwiYSI6ImNrdm4zeGF2dDM5OXAzMHFmNTB2YnkyY20ifQ.QwWqhWiCOf6uC5r5fVYMPg';
-//console.log(process.env);
+const ck = require('ckey');
+mapboxgl.accessToken = ck.REACT_APP_access_token;
 
 export default function App() {
   var county_name;
@@ -37,7 +35,6 @@ export default function App() {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-
   
   function DisplayCases() {
     setshowCases(true);
@@ -64,16 +61,6 @@ export default function App() {
     document.getElementById('deaths').classList.add('seleact');
     document.getElementById('recoveries').classList.remove('seleact');
     document.getElementById('cases').classList.remove('seleact');
-  }
-
-  function onChangeStartDate(newDate){
-    setStartDate(newDate); // For Calendar Input
-    getdata();
-  }
-
-  function onChangeEndDate(newDate){
-    setEndDate(newDate);
-    getdata();
   }
 
   //Calculate the color for layer according to the argument d
@@ -126,11 +113,27 @@ export default function App() {
   }
 
   //Getting data from the database 
-  function getdata(){
-    let start = "" + startDate.toISOString().split("T")[0];
-    let end = "" + endDate.toISOString().split("T")[0];
+  function getdata(start_date, end_date){
+    let start;
+    let end;
+    if(start_date !== null){
+      start = "" + start_date.toISOString().split("T")[0];
+    }
+    else{
+      start = new Date();
+      start = "" + start.toISOString().split("T")[0];
+    }
 
+    if(end_date !== null){
+      end = "" + end_date.toISOString().split("T")[0];
+    }
+    else{
+      end = new Date();
+      end = "" + end.toISOString().split("T")[0];
+    }
 
+    console.log("Start: " + start);
+    console.log("End: " + end);
     fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
@@ -157,10 +160,35 @@ export default function App() {
       )
   }
 
+  function onChangeStartDate(newDate){
+    setIsLoaded(false);
+    if(newDate === null){
+      let date = new Date();
+      setStartDate(date);
+    }
+    else{
+      setStartDate(newDate);
+    }
+    getdata(newDate, endDate);
+  }
+
+  function onChangeEndDate(newDate){
+    setIsLoaded(false);
+    if(newDate === null){
+      let date = new Date();
+      setEndDate(date);
+    }
+    else{
+      setEndDate(newDate);
+    }
+    getdata(startDate, newDate);
+  }
+
   useEffect(() => {
     
+    //Getting the data for the first time when the page is loaded
     if(data === false){
-      getdata();
+      getdata(startDate, endDate);
       setData(true);
     }
 
@@ -246,12 +274,19 @@ export default function App() {
               'line-width': 2
             }
           });
+
           if(cases.length !== 0){
             setshowTable(true);
+          }
+          //if no data is avalable dont show the table
+          else{
+            setshowTable(false);
           }
         }
       }
     });
+
+    
 
     //When user moves mouse on a certain layer diaply the data of that county
     map.on('mousemove', (event) => {
