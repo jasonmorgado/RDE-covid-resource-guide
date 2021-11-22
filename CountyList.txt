@@ -1,25 +1,30 @@
-Bergen County, New Jersey
-Dutchess County, New York
-Essex County, New Jersey
-Fairfield County, Connecticut
-Hudson County, New Jersey
-Hunterdon County, New Jersey
-Litchfield County, Connecticut
-Mercer County, New Jersey
-Middlesex County, New Jersey
-Monmouth County, New Jersey
-Morris County, New Jersey
-Nassau County, New York
-New Haven County, Connecticut
-Ocean County, New Jersey
-Orange County, New York
-Passaic County, New Jersey
-Pike County, Pennsylvania
-Putnam County, New York
-Rockland County, New York
-Somerset County, New Jersey
-Suffolk County, New York
-Sussex County, New Jersey
-Ulster County, New York
-Union County, New Jersey
-Westchester County, New York
+09001,Fairfield,Connecticut
+09005,Litchfield,Connecticut
+09009,New Haven,Connecticut
+34003,Bergen,New Jersey
+34013,Essex,New Jersey
+34017,Hudson,New Jersey
+34019,Hunterdon,New Jersey
+34021,Mercer,New Jersey
+34023,Middlesex,New Jersey
+34025,Monmouth,New Jersey
+34027,Morris,New Jersey
+34029,Ocean,New Jersey
+34031,Passaic,New Jersey
+34035,Somerset,New Jersey
+34037,Sussex,New Jersey
+34039,Union,New Jersey
+36005,Bronx,New York
+36027,Dutchess,New York
+36047,Kings,New York
+36059,Nassau,New York
+36061,New York,New York
+36071,Orange,New York
+36079,Putnam,New York
+36081,Queens,New York
+36085,Richmond,New York
+36087,Rockland,New York
+36103,Suffolk,New York
+36111,Ulster,New York
+36119,Westchester,New York
+42103,Pike,Pennsylvania
