@@ -4,7 +4,7 @@ import shapes from './tristate_county_shapes.json';
 import { ListCases } from './ListCases.js';
 import { ListRecoveries } from './ListRecoveries';
 import { ListDeaths } from './ListDeaths';
-//import DatePicker from 'react-date-picker';
+import DatePicker from 'react-date-picker';
 
 require('dotenv').config();
 
@@ -35,8 +35,8 @@ export default function App() {
 
   const [max, steMax] = useState(0);
 
-  const [startDate, onChangeStartDate] = useState(new Date());
-  const [endDate, onChangeEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   
   function DisplayCases() {
@@ -66,6 +66,15 @@ export default function App() {
     document.getElementById('cases').classList.remove('seleact');
   }
 
+  function onChangeStartDate(newDate){
+    setStartDate(newDate); // For Calendar Input
+    getdata();
+  }
+
+  function onChangeEndDate(newDate){
+    setEndDate(newDate);
+    getdata();
+  }
 
   //Calculate the color for layer according to the argument d
   function ColorCases(d, max) {
@@ -118,7 +127,11 @@ export default function App() {
 
   //Getting data from the database 
   function getdata(){
-    fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'2021-10-10'&'2021-10-10'")
+    let start = "" + startDate.toISOString().split("T")[0];
+    let end = "" + endDate.toISOString().split("T")[0];
+
+
+    fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
@@ -233,7 +246,9 @@ export default function App() {
               'line-width': 2
             }
           });
-          setshowTable(true);
+          if(cases.length !== 0){
+            setshowTable(true);
+          }
         }
       }
     });
@@ -274,6 +289,17 @@ export default function App() {
     return (
       
           <div>
+            <div className="date">
+              <DatePicker
+                onChange={onChangeStartDate}
+                value={startDate}
+              />
+              <DatePicker
+                onChange={onChangeEndDate}
+                value={endDate}
+              />
+            </div>
+
             <div className="centerbar" id="options">
               <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
             </div>

@@ -64,13 +64,13 @@ code {
 }
 
 .map-overlay {
-  width  : 135px;
+  width  : 150px;
   height : 275px;
   background: rgba(35, 55, 75, 0.9);
   color: white;
   font-family: monospace;
   position: fixed;
-  text-align: center;
+  align-items:stretch;
   left: 85%;
   bottom: 5%;
   z-index: 99;
@@ -88,4 +88,9 @@ code {
   height: 20px;
   float: left;
   left: 10%;
+}
+
+.date{
+  left: 80%;
+  top: 20%;
 }
