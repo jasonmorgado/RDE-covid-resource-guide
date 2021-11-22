@@ -13,7 +13,7 @@ code {
 }
 
 .map-container {
-  height: 700px;
+  height: 950px;
 }
 
 .sidebar {
@@ -51,4 +51,41 @@ code {
   border: none;
   outline: none;
   
+}
+
+.seleact{
+  background-color: white;
+  color: black;
+  padding: 0px 6px;
+  font-family: monospace;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.map-overlay {
+  width  : 135px;
+  height : 275px;
+  background: rgba(35, 55, 75, 0.9);
+  color: white;
+  font-family: monospace;
+  position: fixed;
+  text-align: center;
+  left: 85%;
+  bottom: 5%;
+  z-index: 99;
+} 
+
+.data{
+  padding-left : 50px; 
+  float:left;
+  position: absolute;
+}
+
+.color-box {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  float: left;
+  left: 10%;
 }

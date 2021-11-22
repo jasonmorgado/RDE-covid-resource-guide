@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import shapes from './tristate_county_shapes.json';
+import { ListCases } from './ListCases.js';
+import { ListRecoveries } from './ListRecoveries';
+import { ListDeaths } from './ListDeaths';
 //import DatePicker from 'react-date-picker';
 
 require('dotenv').config();
@@ -12,9 +15,9 @@ export default function App() {
   var county_name;
   var display_data;
   const mapContainer = useRef(null);
-  const lng = (-74.0483);
-  const lat = (40.3046);
-  const zoom = (7);
+  const lng = (-74.172310);
+  const lat = (40.733125);
+  const zoom = (8);
   const [error, setError] = useState(null);
   const [data, setData] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -25,20 +28,78 @@ export default function App() {
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
 
+  const [showCases, setshowCases] = useState(true);
+  const [showRecoveries, setshowRecoveries] = useState(false);
+  const [showDeaths, setshowDeaths] = useState(false);
+  const [showTable, setshowTable] = useState(false);
+
+  const [max, steMax] = useState(0);
+
   const [startDate, onChangeStartDate] = useState(new Date());
   const [endDate, onChangeEndDate] = useState(new Date());
 
+  
+  function DisplayCases() {
+    setshowCases(true);
+    setshowRecoveries(false);
+    setshowDeaths(false);
+    document.getElementById('cases').classList.add('seleact');
+    document.getElementById('recoveries').classList.remove('seleact');
+    document.getElementById('deaths').classList.remove('seleact');
+  }
+
+  function DisplayRecoveries() {
+    setshowCases(false);
+    setshowRecoveries(true);
+    setshowDeaths(false);
+    document.getElementById('recoveries').classList.add('seleact');
+    document.getElementById('cases').classList.remove('seleact');
+    document.getElementById('deaths').classList.remove('seleact');
+  }
+
+  function DisplayDeaths() {
+    setshowCases(false);
+    setshowRecoveries(false);
+    setshowDeaths(true);
+    document.getElementById('deaths').classList.add('seleact');
+    document.getElementById('recoveries').classList.remove('seleact');
+    document.getElementById('cases').classList.remove('seleact');
+  }
+
 
   //Calculate the color for layer according to the argument d
-  function getColor(d) {
-    return d > 140 ? '#800026' :
-           d > 120  ? '#BD0026' :
-           d > 100  ? '#E31A1C' :
-           d > 80  ? '#FC4E2A' :
-           d > 60   ? '#FD8D3C' :
-           d > 40   ? '#FEB24C' :
-           d > 20   ? '#FED976' :
+  function ColorCases(d, max) {
+    let num = max/8;
+    return d > max ? '#800026' :
+           d > (num + num + num + num + num + num)  ? '#BD0026' :
+           d > (num + num + num + num + num)  ? '#E31A1C' :
+           d > (num + num + num + num)  ? '#FC4E2A' :
+           d > (num + num + num)   ? '#FD8D3C' :
+           d > (num + num)   ? '#FEB24C' :
+           d > (num)   ? '#FED976' :
                       '#FFEDA0';
+  }
+  function ColorRecoveries(d, max) {
+    let num = max/8;
+    return d > max ? '#005824' :
+           d > (num + num + num + num + num + num + num)  ? '#238b45' :
+           d > (num + num + num + num + num)  ? '#41ae76' :
+           d > (num + num + num + num)  ? '#66c2a4' :
+           d > (num + num + num)  ? '#99d8c9' :
+           d > (num + num)  ? '#ccece6' :
+           d > (num)   ? '#e5f5f9' :
+                      '#f7fcfd';
+  }
+  function ColorDeaths(d, max) {
+    let num = max/8;
+    return d > max ? '#99000d' :
+           d > (num + num + num + num + num + num + num)  ? '#cb181d' :
+           d > (num + num + num + num + num)   ? '#ef3b2c' :
+           d > (num + num + num + num)  ? '#fb6a4a' :
+           d > (num + num + num)   ? '#fc9272' :
+           d > (num + num)  ? '#fcbba1' :
+           d > (num)  ? '#fee0d2' :
+                      '#fff5f0';
   }
   
   //Find which index is county data is stored in the array 
@@ -109,14 +170,30 @@ export default function App() {
           const stateid = feature.properties.STATE;
           const county_name = feature.properties.NAME;
           let source;
+          let color;
+          let show;
 
-          let i = getindex(countyid, stateid);        
-          let color = getColor(cases[i]);
-          let county_cases = cases[i];
-
+          let i = getindex(countyid, stateid);
+          
+          if(showCases === true){
+            steMax(Math.max(...cases));
+            color = ColorCases(cases[i], max);
+            show = cases[i];
+          }
+          if(showRecoveries === true){
+            steMax(Math.max(...recoveries));
+            color = ColorRecoveries(recoveries[i], max);
+            show = recoveries[i];
+          }
+          if(showDeaths === true){
+            steMax(Math.max(...deaths));
+            color = ColorDeaths(deaths[i], max);
+            show = deaths[i];
+          }
+                    
           //If county data is found in the databse 
           if(i){
-            source = stateid + countyid + "&" + county_cases;
+            source = stateid + countyid + "&" + show;
           }
           //No county data is found 
           else{
@@ -156,6 +233,7 @@ export default function App() {
               'line-width': 2
             }
           });
+          setshowTable(true);
         }
       }
     });
@@ -177,24 +255,47 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
-          document.getElementById('name').innerHTML = county_name + "<br>" + "Cases: " + display_data;
+          if(showCases === true){
+            document.getElementById('name').innerHTML = county_name + "<br>" + "Cases: " + display_data;
+          }
+          if(showRecoveries === true){
+            document.getElementById('name').innerHTML = county_name + "<br>" + "Recoveries: " + display_data;
+          }
+          if(showDeaths === true){
+            document.getElementById('name').innerHTML = county_name + "<br>" + "Deaths: " + display_data;
+          }
+
           }
       });
     });
+
   });
 
     return (
       
           <div>
-            <div ref={mapContainer} className="map-container" />
-
             <div className="centerbar" id="options">
-              <button onclick="activateLasers()" className="button">Cases |</button>
-              <button onclick="activateLasers()" className="button">Recoveries |</button>
-              <button onclick="activateLasers()" className="button">Deaths</button>
+              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
             </div>
 
             <div className="sidebar" id="name"></div>
+            <div ref={mapContainer} className="map-container" />
+
+            {showTable === true ?(
+              <div class='map-overlay' id='legend'>
+                <p>
+                  {showCases === true ?(
+                    <ListCases max={max} getcolor={ColorCases}/>
+                  ) : null}
+                  {showRecoveries === true ?(
+                    <ListRecoveries max={max} getcolor={ColorCases}/>
+                  ) : null}
+                  {showDeaths === true ?(
+                    <ListDeaths max={max} getcolor={ColorCases}/>
+                  ) : null}
+                </p>
+              </div>
+            ) : null}
           </div>
        
     );
