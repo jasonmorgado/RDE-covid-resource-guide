@@ -90,6 +90,7 @@ code {
   height: 20px;
   float: left;
   left: 10%;
+  opacity: 1;
 }
 
 .date{
