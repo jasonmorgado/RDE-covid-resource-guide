@@ -13,7 +13,8 @@ code {
 }
 
 .map-container {
-  height: 950px;
+  height: 660px;
+  width: 1440px;
 }
 
 .sidebar {
@@ -27,4 +28,72 @@ code {
   left: 0;
   margin: 12px;
   border-radius: 4px;
+}
+
+.centerbar{
+  background-color: rgba(35, 55, 75, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 42%;
+  margin: 12px;
+  border-radius: 4px;
+}
+
+.button{
+  background-color: transparent;
+  color: #fff;
+  padding: 0px 6px;
+  font-family: monospace;
+  text-align: center;
+  border: none;
+  outline: none;
+  
+}
+
+.seleact{
+  background-color: white;
+  color: black;
+  padding: 0px 6px;
+  font-family: monospace;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.map-overlay {
+  width  : 170px;
+  height : 275px;
+  background: rgba(35, 55, 75, 0.9);
+  color: white;
+  font-family: monospace;
+  position: fixed;
+  align-items:stretch;
+  display: inline-block;
+  left: 85%;
+  bottom: 5%;
+  z-index: 99;
+} 
+
+.data{
+  padding-left : 50px; 
+  float:left;
+  position: absolute;
+}
+
+.color-box {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  float: left;
+  left: 10%;
+  opacity: 1;
+}
+
+.date{
+  display: flex;
+  float: right;
 }
