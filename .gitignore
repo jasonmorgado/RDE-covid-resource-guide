@@ -6,3 +6,4 @@ box.exe
 *.log
 8xkx-amqh.json
 *.py
+*/node_modules/
