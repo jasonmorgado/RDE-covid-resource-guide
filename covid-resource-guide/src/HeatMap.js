@@ -298,7 +298,6 @@ export default function App() {
     map.on('mousemove', (event) => {
       const county = map.queryRenderedFeatures(event.point);
       const display = ['source', 'layer', 'properties',];
-      console.log("id: " +  event.features);
 
       const displayFeatures = county.map((feat) => {
         const displayFeat = {};
@@ -331,6 +330,16 @@ export default function App() {
     return (
       
           <div>
+            <div>
+              <div ref={mapContainer} className="map-container" />
+            </div>
+            
+            <div className="centerbar" id="options">
+              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
+            </div>
+
+            <div className="sidebar" id="name"></div>
+
             <div className="date">
               <DatePicker
                 onChange={onChangeStartDate}
@@ -342,15 +351,8 @@ export default function App() {
               />
             </div>
 
-            <div className="centerbar" id="options">
-              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
-            </div>
-
-            <div className="sidebar" id="name"></div>
-            <div ref={mapContainer} className="map-container" />
-
             {showTable === true ?(
-              <div class='map-overlay' id='legend'>
+              <div id='legend'>
                 <p>
                   {showCases === true ?(
                     <ListCases max={max} getcolor={ColorCases}/>

@@ -13,8 +13,13 @@ code {
 }
 
 .map-container {
-  height: 660px;
-  width: 1440px;
+  display: block;
+  position: absolute; 
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0; 
+  margin: 0;
 }
 
 .sidebar {
@@ -65,7 +70,7 @@ code {
 }
 
 .map-overlay {
-  width  : 170px;
+  width  : 200px;
   height : 275px;
   background: rgba(35, 55, 75, 0.9);
   color: white;
@@ -78,10 +83,13 @@ code {
   z-index: 99;
 } 
 
-.data{
-  padding-left : 50px; 
+
+ .data{
+  padding-left : 60px; 
+  padding-right : 20px;   
   float:left;
   position: absolute;
+  color: white;
 }
 
 .color-box {
@@ -94,6 +102,8 @@ code {
 }
 
 .date{
-  display: flex;
   float: right;
+  right: 10%;
+  margin-right: 12px;
+  top: 0%;
 }

@@ -4,7 +4,7 @@ import './index.css';
 export function ListDeaths(props){
     var num = Math.round(props.max/8);
     return (
-    <div>
+    <div className="map-overlay">
         <tr>
             <p className="color-box" style={{backgroundColor: "rgb(255, 245, 240)" }}></p> <p className="data">0 - {num}</p>
         </tr>
