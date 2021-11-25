@@ -1,10 +1,10 @@
 import React from 'react';
-import './Map.css';
+import './index.css';
 
 export function ListRecoveries(props){
     var num = Math.round(props.max/8);
     return (
-    <div className="map-overlay">
+    <div>
         <tr>
             <p className="color-box" style={{backgroundColor: "rgb(247, 252, 253)" }}></p> <p className="data">0 - {num}</p>
         </tr>
