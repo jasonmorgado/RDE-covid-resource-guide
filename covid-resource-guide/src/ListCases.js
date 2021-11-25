@@ -1,10 +1,10 @@
 import React from 'react';
-import './Map.css';
+import './index.css';
 
 export function ListCases(props){
     var num = Math.round(props.max/8);
     return (
-    <div className="map-overlay">
+    <div>
         <tr>
             <p className="color-box" style={{backgroundColor: "rgb(255, 237, 160)" }}></p> <p className="data">0 - {num}</p>
         </tr>

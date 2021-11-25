@@ -1,11 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import AppWrapper from "./AppWrapper";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import './index.css';
+import App from './App';
+import Map from './Map';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppWrapper />
+    <App />
+    <Map />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
