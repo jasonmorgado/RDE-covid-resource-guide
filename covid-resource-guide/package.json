@@ -44,7 +44,6 @@
 		"not dead",
 		"not op_mini all"
 	],
-	"proxy": "https://donatebahamas.com",
 	"devDependencies": {
 		"autoprefixer": "^9.8.8",
 		"dotenv": "^10.0.0",
