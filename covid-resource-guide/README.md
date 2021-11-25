@@ -1,17 +1,11 @@
-# To Runs
+# Running the React App
 
-Run the script in the root folder
+First make sure you're in the covid-resource-guide directory.
 
-```bash
-npm install
-```
+Install the packages using `npm install`
 
-May display warnings due to version mismatch of node and npm.
+Start the React server using `npm start`
 
-then run in the root folder
+It is advisable to have the commandbox server running first, as it does not hang in the CLI.
 
-```bash
-npm start
-```
-
-It won't work on insecure protocol like HTTP, as browser does not allow getting location on insecure protocols.
+This application won't function over HTTP as opposed to HTTPS, as fetching the testing location requires a secure connection.
