@@ -8,6 +8,14 @@
 		"@testing-library/jest-dom": "^5.15.0",
 		"@testing-library/react": "^11.2.7",
 		"@testing-library/user-event": "^12.8.3",
+		"chart.js": "^2.9.3",
+    	"ckey": "^1.0.3",
+    	"mapbox-gl": "^2.6.0",
+		"multiselect-react-dropdown": "^2.0.7",
+    	"react-chartjs-2": "^2.8.0",
+    	"react-date-picker": "^8.3.5",
+    	"react-dropdown": "^1.9.2",
+    	"react-map-gl": "^6.1.17",
 		"leaflet": "^1.7.1",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
@@ -40,6 +48,7 @@
 	"devDependencies": {
 		"autoprefixer": "^9.8.8",
 		"postcss": "^7.0.39",
-		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+		"dotenv": "^10.0.0"
 	}
 }

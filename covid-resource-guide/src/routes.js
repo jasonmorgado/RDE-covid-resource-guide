@@ -2,6 +2,9 @@ import React from "react";
 import { Header } from "./components";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import TestingLocations from "./screens/TestingLocations";
+import HeatMap from "./screens/HeatMap.js";
+import Reports from "./screens/ChartsPage.jsx";
+
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -23,8 +26,10 @@ export default function routes() {
     <div className="h-full flex flex-col">
       <Header />
       <Routes>
-        <Route path="/" element={<TestingLocations />} />
+        <Route path="/" element={<HeatMap />} />
+        <Route path="/heatMap" element={<HeatMap />} />
         <Route path="/testingLocations" element={<TestingLocations />} />
+        <Route path="/reports" element={<Reports />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
