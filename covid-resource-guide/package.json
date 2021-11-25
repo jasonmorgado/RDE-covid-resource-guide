@@ -51,3 +51,4 @@
 		"postcss": "^7.0.39",
 		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
 	}
+}

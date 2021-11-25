@@ -1,5 +1,6 @@
 import React from 'react';
 import './HeatMap.css';
+
 export function ListCases(props){
     var num = Math.round(props.max/8);
     return (
