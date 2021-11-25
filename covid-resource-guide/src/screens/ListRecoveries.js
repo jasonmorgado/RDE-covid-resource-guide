@@ -1,9 +1,10 @@
 import React from 'react';
 import './HeatMap.css';
+
 export function ListRecoveries(props){
     var num = Math.round(props.max/8);
     return (
-    <div>
+    <div className="map-overlay">
         <tr>
             <p className="color-box" style={{backgroundColor: "rgb(247, 252, 253)" }}></p> <p className="data">0 - {num}</p>
         </tr>

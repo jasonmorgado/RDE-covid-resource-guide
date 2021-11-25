@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import shapes from './tristate_county_shapes.json';
 import { ListCases } from './ListCases.js';
@@ -34,7 +35,7 @@ export default function App() {
 
   const [max, steMax] = useState(0);
 
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
   
   function DisplayCases() {
@@ -67,7 +68,7 @@ export default function App() {
   //Calculate the color for layer according to the argument d
   function ColorCases(d, max) {
     let num = max/8;
-    return d > max ? '#800026' :
+    return d >= max ? '#800026' :
            d > (num + num + num + num + num + num)  ? '#BD0026' :
            d > (num + num + num + num + num)  ? '#E31A1C' :
            d > (num + num + num + num)  ? '#FC4E2A' :
@@ -79,7 +80,7 @@ export default function App() {
   function ColorRecoveries(d, max) {
     let num = max/8;
     return d > max ? '#005824' :
-           d > (num + num + num + num + num + num + num)  ? '#238b45' :
+           d > (num + num + num + num + num + num)  ? '#238b45' :
            d > (num + num + num + num + num)  ? '#41ae76' :
            d > (num + num + num + num)  ? '#66c2a4' :
            d > (num + num + num)  ? '#99d8c9' :
@@ -90,7 +91,7 @@ export default function App() {
   function ColorDeaths(d, max) {
     let num = max/8;
     return d > max ? '#99000d' :
-           d > (num + num + num + num + num + num + num)  ? '#cb181d' :
+           d > (num + num + num + num + num + num)  ? '#cb181d' :
            d > (num + num + num + num + num)   ? '#ef3b2c' :
            d > (num + num + num + num)  ? '#fb6a4a' :
            d > (num + num + num)   ? '#fc9272' :
@@ -201,6 +202,12 @@ export default function App() {
       zoom: zoom
     });
 
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
     
     map.on('load', async () => {
 
@@ -260,7 +267,7 @@ export default function App() {
             'layout': {},
             'paint': {
               'fill-color': color, 
-              'fill-opacity': 0.5
+              'fill-opacity': 1
               }
           });
 
@@ -271,8 +278,8 @@ export default function App() {
             'source': source,
             'layout': {},
             'paint': {
-              'line-color': '#000',
-              'line-width': 2
+              'line-color': 'black',
+              'line-width': 2,
             }
           });
 
@@ -325,6 +332,16 @@ export default function App() {
     return (
       
           <div>
+            <div>
+              <div ref={mapContainer} className="map-container" />
+            </div>
+            
+            <div className="centerbar" id="options">
+              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
+            </div>
+
+            <div className="sidebar" id="name"></div>
+
             <div className="date">
               <DatePicker
                 onChange={onChangeStartDate}
@@ -336,15 +353,8 @@ export default function App() {
               />
             </div>
 
-            <div className="centerbar" id="options">
-              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
-            </div>
-
-            <div className="sidebar" id="name"></div>
-            <div ref={mapContainer} className="map-container" />
-
             {showTable === true ?(
-              <div class='map-overlay' id='legend'>
+              <div id='legend'>
                 <p>
                   {showCases === true ?(
                     <ListCases max={max} getcolor={ColorCases}/>

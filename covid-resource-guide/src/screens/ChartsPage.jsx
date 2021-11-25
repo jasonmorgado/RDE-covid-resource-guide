@@ -1,4 +1,4 @@
-import './App.css';
+import './Charts.css';
 import ChartsInput from "./ChartsInput.jsx";
 import CovidDataChartList from "./CovidDataChartList";
 import CovidDataTable from "./CovidDataTable.jsx";
