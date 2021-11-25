@@ -27,7 +27,7 @@ function CovidDataTable(props) {
   const [countyMap, setCountyMap] = useState({});
 
   function getTable(rows, countyMap){
-    if(Array.isArray(rows)){
+    if(rows && countyMap){
       const table_rows = rows.map((row) =>
         <tr key={row[0]}>
           <td>{countyMap[row[0]]}</td>
