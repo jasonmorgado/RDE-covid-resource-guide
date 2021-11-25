@@ -1,11 +1,12 @@
 .map-container {
     display: block;
     position: absolute; 
-    top: 66px;
+    top: 5.5%;
     bottom: 0;
+    height: 100%;
     width: 100%;
-    padding: 0; 
-    margin: 0;
+    right: auto;
+    left: auto;
   }
   
   .sidebar {
@@ -15,7 +16,7 @@
     font-family: monospace;
     z-index: 1;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     margin: 12px;
     border-radius: 4px;
@@ -28,7 +29,7 @@
     font-family: monospace;
     z-index: 1;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 42%;
     margin: 12px;
     border-radius: 4px;
@@ -56,17 +57,18 @@
   }
   
   .map-overlay {
-    width  : 200px;
-    height : 275px;
+    width  : 215px;
+    height : 320px;
     background: rgba(35, 55, 75, 0.9);
     color: white;
     font-family: monospace;
     position: fixed;
     align-items:stretch;
     display: inline-block;
-    left: 85%;
-    bottom: 5%;
+    left: 84%;
+    bottom: 4%;
     z-index: 99;
+    padding: 1%;
   } 
   
   
@@ -91,5 +93,5 @@
     float: right;
     right: 10%;
     margin-right: 12px;
-    top: 0%;
+    top: 60px;
   }

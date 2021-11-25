@@ -6,7 +6,7 @@ import { ListCases } from './ListCases.js';
 import { ListRecoveries } from './ListRecoveries';
 import { ListDeaths } from './ListDeaths';
 import DatePicker from 'react-date-picker';
-import './Map.css';
+import './HeatMap.css';
 
 const ck = require('ckey');
 mapboxgl.accessToken = ck.REACT_APP_access_token;
