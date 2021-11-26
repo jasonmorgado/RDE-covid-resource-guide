@@ -6,7 +6,7 @@ import { ListCases } from './ListCases.js';
 import { ListRecoveries } from './ListRecoveries';
 import { ListDeaths } from './ListDeaths';
 import DatePicker from 'react-date-picker';
-import './Map.css';
+import './HeatMap.css';
 
 const ck = require('ckey');
 mapboxgl.accessToken = ck.REACT_APP_access_token;
@@ -134,18 +134,13 @@ export default function App() {
       end = "" + end.toISOString().split("T")[0];
     }
 
-    console.log("Start: " + start);
-    console.log("End: " + end);
     fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
-
           let data_rows = json_data.DATA;
-          const fips = data_rows.FIPS;
           
-          console.log(data_rows);
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
           setCases(data_rows.SUM_CASES);
@@ -217,7 +212,6 @@ export default function App() {
         for (const feature of shapes.features) {
           const countyid = feature.properties.COUNTY;
           const stateid = feature.properties.STATE;
-          const county_name = feature.properties.NAME;
           let source;
           let color;
           let show;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Map.css';
+import './HeatMap.css';
 
 export function ListDeaths(props){
     var num = Math.round(props.max/8);
