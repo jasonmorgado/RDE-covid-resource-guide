@@ -7,7 +7,7 @@ import { useState } from 'react';
 function ChartsPage(){
 
   // Data from Inputs
-  const [countyList, setCountyList] = useState([]);
+  const [countyList, setCountyList] = useState([{"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"}]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [metrics, setMetrics] = useState([]);

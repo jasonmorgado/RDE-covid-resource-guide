@@ -20,7 +20,7 @@ function CovidDataChart(props){
           setRows(data_rows);
         }
       )
-  }, [startDate, endDate, fips]);
+  }, [startDate, endDate, fips, metrics]);
 
   var datasets = [
     {
@@ -117,8 +117,6 @@ function CovidDataChart(props){
     let dataset = datasets[metric_id];
     data.datasets.push(dataset);
   }
-
-
   return <Line data={data} legend={legend} options={options} />;
 
 }
