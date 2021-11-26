@@ -26,16 +26,39 @@ function CovidDataTable(props) {
   const [countyDataList, setCountyDataList] = useState([]);
   const [countyMap, setCountyMap] = useState({});
 
-  function getTable(rows, countyMap){
-    if(Array.isArray(rows)){
-      const table_rows = rows.map((row) =>
+  function getCounty(fips){
+    if (countyMap[fips]){
+      return countyMap[fips];
+    }else{
+      return "SKIP";
+    }
+  }
+
+  function getRow(row){
+    if (true){
+      return(
         <tr key={row[0]}>
-          <td>{countyMap[row[0]]}</td>
+          <td>{getCounty(row[0])}</td>
           <td>{row[1]}</td>
           <td>{row[2]}</td>
           <td>{row[3]}</td>
         </tr>
       );
+    }
+  }
+
+  function getTable(rows, countyMap){
+    if(Array.isArray(rows)){
+      const table_rows = rows.map((row) => (
+        getCounty(row[0]) != "SKIP"
+        ? (<tr key={row[0]}>
+            <td>{getCounty(row[0])}</td>
+            <td>{row[1]}</td>
+            <td>{row[2]}</td>
+            <td>{row[3]}</td>
+          </tr>)
+          :null
+      ));
       const table = (
         <table>
           <thead>
