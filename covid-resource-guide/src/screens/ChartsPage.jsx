@@ -16,9 +16,6 @@ function ChartsPage(){
   return (
     <div id="ChartsPage">
       <header className="App-header">
-        <p>CountyList:{countyList.length}</p>
-        <p>StartDate:{startDate}</p>
-        <p>EndDate:{endDate}</p>
         <ChartsInput
           setCountyList={setCountyList}
           setStartDate={setStartDate}
