@@ -107,7 +107,7 @@ function CovidDataChart(props){
     },
     title:{
       display:true,
-      text: countyName
+      text: countyName + " County"
     },
   };
   // Map Selected metrics to their datasets, put in graph
