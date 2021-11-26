@@ -18,7 +18,7 @@ function getCharts(props){
         metrics={metrics}
       />
     );
-  }else{
+  } else {
     return("Nocountylist")
   }
 
