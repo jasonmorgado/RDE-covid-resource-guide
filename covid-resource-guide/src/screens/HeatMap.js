@@ -224,9 +224,9 @@ export default function App() {
             color = ColorDeaths(deaths[i], max);
             show = deaths[i];
           }
-                    
+          
           //If county data is found in the databse 
-          if(i){
+          if(i !== undefined){
             source = stateid + countyid + "&" + show;
           }
           //No county data is found 
@@ -291,7 +291,7 @@ export default function App() {
         display.forEach((prop) => {
           displayFeat[prop] = feat[prop];
         });
-        
+
         var data = displayFeat.source;
         data = data.split("&");
         display_data = data[1];
