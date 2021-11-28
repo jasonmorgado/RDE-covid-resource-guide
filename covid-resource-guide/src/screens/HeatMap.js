@@ -67,37 +67,28 @@ export default function App() {
 
   //Calculate the color for layer according to the argument d
   function ColorCases(d, max) {
-    let num = max/8;
-    return d >= max ? '#800026' :
-           d > (num + num + num + num + num + num)  ? '#BD0026' :
-           d > (num + num + num + num + num)  ? '#E31A1C' :
-           d > (num + num + num + num)  ? '#FC4E2A' :
-           d > (num + num + num)   ? '#FD8D3C' :
-           d > (num + num)   ? '#FEB24C' :
-           d > (num)   ? '#FED976' :
-                      '#FFEDA0';
+    let num = max/22;
+    return d >= max ? '#a63603' :
+           d > (num + num + num)  ? '#e6550d' :
+           d > (num + num)   ? '#fd8d3c' :
+           d > (num)   ? '#fdbe85' :
+                      '#feedde';
   }
   function ColorRecoveries(d, max) {
-    let num = max/8;
-    return d > max ? '#005824' :
-           d > (num + num + num + num + num + num)  ? '#238b45' :
-           d > (num + num + num + num + num)  ? '#41ae76' :
-           d > (num + num + num + num)  ? '#66c2a4' :
-           d > (num + num + num)  ? '#99d8c9' :
-           d > (num + num)  ? '#ccece6' :
-           d > (num)   ? '#e5f5f9' :
-                      '#f7fcfd';
+    let num = max/22;
+    return d > max ? '#006d2c' :
+           d > (num + num + num)  ? '#31a354' :
+           d > (num + num)  ? '#74c476' :
+           d > (num)  ? '#bae4b3' :
+                      '#edf8e9';
   }
   function ColorDeaths(d, max) {
-    let num = max/8;
-    return d > max ? '#99000d' :
-           d > (num + num + num + num + num + num)  ? '#cb181d' :
-           d > (num + num + num + num + num)   ? '#ef3b2c' :
-           d > (num + num + num + num)  ? '#fb6a4a' :
-           d > (num + num + num)   ? '#fc9272' :
-           d > (num + num)  ? '#fcbba1' :
-           d > (num)  ? '#fee0d2' :
-                      '#fff5f0';
+    let num = max/22;
+    return d > max ? '#a50f15' :
+           d > (num + num + num)  ? '#de2d26' :
+           d > (num + num)  ? '#fb6a4a' :
+           d > (num)  ? '#fcae91' :
+                      '#fee5d9';
   }
   
   //Find which index is county data is stored in the array 
@@ -111,6 +102,8 @@ export default function App() {
         }
       }
     }
+    console.log("State ID: " + stateid);
+    console.log("County ID: " + countyid);
     return
   }
 
@@ -140,6 +133,8 @@ export default function App() {
         (json_string) => {
           let json_data = JSON.parse(json_string);
           let data_rows = json_data.DATA;
+
+          console.log(data_rows);
           
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
