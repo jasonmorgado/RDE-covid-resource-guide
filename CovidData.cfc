@@ -53,6 +53,7 @@ component restpath="/CovidData"  rest="true" {
 
         county_list.append(county_data)
       }
+      FileClose(county_data_file);
     //dict = {county_list=county_list}
     returnVal = SerializeJSON(county_list);
 
