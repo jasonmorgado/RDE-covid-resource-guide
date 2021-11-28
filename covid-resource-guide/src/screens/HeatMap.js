@@ -102,8 +102,6 @@ export default function App() {
         }
       }
     }
-    console.log("State ID: " + stateid);
-    console.log("County ID: " + countyid);
     return
   }
 
@@ -133,8 +131,6 @@ export default function App() {
         (json_string) => {
           let json_data = JSON.parse(json_string);
           let data_rows = json_data.DATA;
-
-          console.log(data_rows);
           
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
