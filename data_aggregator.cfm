@@ -10,7 +10,7 @@ function run_aggregator(){
   }
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
-  // clear_covid_data();
+  update_county_data();
   fetch_covid_data();
   insert_covid_data();
   calculate_covid_stats();
@@ -31,12 +31,6 @@ function days_since_update(){
   return days_since_update
 }
 
-function clear_covid_data(){
-  writeOutput("<br>Clearing Covid table:");
-  sql_query = "DELETE FROM covid_data";
-  myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
-  cfdump(var=myQuery);
-}
 
 function fetch_covid_data(){
   // Fetches csv file containing today's Covid Cases/Deaths by county.
@@ -45,25 +39,38 @@ function fetch_covid_data(){
   cfhttp(url=fileURL, method="GET", file="us-counties(all).csv");
 }
 
+function drop_table(table_name){
+  sql_query = "DELETE FROM #table_name#"
+  myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+}
+
+
+function ignore_dups(table_name){
+  sql_query = "ALTER TABLE #table_name# REBUILD WITH (IGNORE_DUP_KEY = ON)"
+  myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+}
+
 function update_county_data(){
   // Takes counties from county_data.csv and uploads to DB
   // Only called once to ready the DB.
-  county_data_file = FileOpen("county_data.csv", "read");
+  ignore_dups("counties");
+  county_data_file = FileOpen("CountyList.csv", "read");
   values = []
   while (NOT FileisEOF(county_data_file)){
     line = FileReadLine(county_data_file);
     line_data = listToArray(line, ',');
     //cfdump(var=line_data);
-    fips = line_data[1];
+    fips = NumberFormat(line_data[1], "00000");
     county = line_data[2];
     state = line_data[3];
-    population = line_data[4]
     // Don't forget quotation marks on strings! Not passed over like Python.
-    value = "(#fips#, '#county#', '#state#', '#population#')";
+    value = "(#fips#, '#county#', '#state#', '0')";
     values.Append(value);
   }
 
   writeOutput("<br>Writing counties to DB:");
+  list = values.ToList();
+
   sql_query = "INSERT INTO counties (fips, county_name, state, population) VALUES " & list
   myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
   cfdump(var=myQuery);
@@ -78,12 +85,27 @@ function show_covid_data(){
   cfdump(var=myQuery);
 }
 
+function get_fips_list(){
+  county_data_file = FileOpen("CountyList.txt", "read");
+  fips_values = []
+  while (NOT FileisEOF(county_data_file)){
+    line = FileReadLine(county_data_file);
+    line_data = listToArray(line, ',', true);
+    fips = NumberFormat(line_data[1], "00000");
+    fips_values.Append(fips);
+  }
+  FileClose(county_data_file);
+  return fips_values;
+}
+
 function insert_covid_data(){
   // Uses data from NYTimes' Repo "us-counties.csv"
   // Inserts rows into DB with cases, deaths
   // Table is currently configured to ignore duplicate values
+  ignore_dups("covid_data");
   covid_data_file = FileOpen("us-counties(all).csv", "read");
   values = []
+  target_fips_list = get_fips_list();
   while (NOT FileisEOF(covid_data_file)){
     line = FileReadLine(covid_data_file);
     line_data = listToArray(line, ',', true);
@@ -93,13 +115,19 @@ function insert_covid_data(){
     cases = line_data[5];
     deaths = line_data[6];
 
-    in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
-    if (in_target_area AND fips != ""){
-      value = "(#fips#, '#date#', '#cases#', '#deaths#')";
+    in_target_area = arrayContains(target_fips_list, fips);
+    if (in_target_area){
+      value = "(#NumberFormat(fips, "00000")#, '#date#', '#cases#', '#deaths#')";
       values.Append(value);
+    } else if(line_data[2] == "New York City") {
+      nyc_counties = [36085, 36047, 36081, 36061, 36005]
+      for (fips in nyc_counties){
+        value = "(#fips#, '#date#', '#cases#', '#deaths#')";
+        values.Append(value);
+      }
     }
 
-    if(ArrayLen(values) == 999 OR FileisEOF(covid_data_file)){
+    if(ArrayLen(values) >= 990 OR FileisEOF(covid_data_file)){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
