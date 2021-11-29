@@ -3,17 +3,22 @@ run_aggregator();
 function run_aggregator(){
   // Main Aggregator Script, this gets called daily.
   ONCE_A_DAY = true;
+  cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
+
+  /*
   if(days_since_update() < 1 AND ONCE_A_DAY){
     cfdump(var="Aggregator already ran today!");
     show_covid_data();
     return;
   }
+  */
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
   // clear_covid_data();
   fetch_covid_data();
   insert_covid_data();
   calculate_covid_stats();
+  update_county_data();
   // fetch_vaccine_data();
   // More aggregation scripts here
 }
@@ -56,15 +61,15 @@ function update_county_data(){
     //cfdump(var=line_data);
     fips = line_data[1];
     county = line_data[2];
-    state = line_data[3];
-    population = line_data[4]
+    //state = line_data[3];
+    population = line_data[3]
     // Don't forget quotation marks on strings! Not passed over like Python.
     value = "(#fips#, '#county#', '#state#', '#population#')";
     values.Append(value);
   }
 
   writeOutput("<br>Writing counties to DB:");
-  sql_query = "INSERT INTO counties (fips, county_name, state, population) VALUES " & list
+  sql_query = "INSERT INTO coviddatabase.dbo.counties (fips, county_name, state, population) VALUES " & list
   myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
   cfdump(var=myQuery);
 }
@@ -103,7 +108,7 @@ function insert_covid_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
-      sql_query = "INSERT INTO covid_data (fips, date, total_cases, total_deaths) VALUES " & list
+      sql_query = "INSERT INTO coviddatabase.dbo.CovidData (fips, date, total_cases, total_deaths) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});

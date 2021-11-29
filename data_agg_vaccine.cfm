@@ -11,11 +11,11 @@
         return;
       }
       cfdump(var="Running Aggregator...");
-      /*
+      
       fetch_covid_data();
-      insert_covid_data();
-      calculate_covid_stats();
-      */
+      insert_vax_data();
+      //calculate_covid_stats();
+      
       
       fetch_vaccine_data();
       // More aggregation scripts here
@@ -34,14 +34,14 @@
     function fetch_covid_data(){
       // Fetches csv file containing today's Covid Cases/Deaths by county.
       // Sourced from NYTimes' GitHub repo.
-      fileURL = "https://data.cdc.gov/Vaccinations/COVID-19-Vaccinations-in-the-United-States-County/8xkx-amqh/data";
+      fileURL = "https://data.cdc.gov/resource/8xkx-amqh.csv";
       cfhttp(url=fileURL, method="GET", file="vaccinedatathings.csv");
     }
     
     function update_county_data(){
       // Takes counties from county_data.csv and uploads to DB
       // Only called once to ready the DB.
-      county_vaccine_file = FileOpen("county_data.csv", "read");
+      county_vaccine_file = FileOpen("vax_data.csv", "read");
       values = []
       while (NOT FileisEOF(county_vaccine_file)){
         line = FileReadLine(county_vaccine_file);
@@ -71,24 +71,24 @@
       cfdump(var=myQuery);
     }
     
-    function insert_covid_data(){
+    function insert_vax_data(){
       // Uses data from NYTimes' Repo "us-counties.csv"
       // Inserts rows into DB with cases, deaths
       // Table is currently configured to ignore duplicate values
-      covid_data_file = FileOpen("us-counties(all).csv", "read");
+      covid_data_file = FileOpen("vaccinedatathings.csv", "read");
       values = []
       while (NOT FileisEOF(covid_data_file)){
         line = FileReadLine(covid_data_file);
         line_data = listToArray(line, ',', true);
         state = line_data[3];
-        fips = line_data[4];
+        fips = line_data[2];
         date = line_data[1];
-        cases = line_data[5];
-        deaths = line_data[6];
+        seriescomplete = line_data[7];
+        firstdose = line_data[15];
     
         in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
         if (in_target_area AND fips != ""){
-          value = "(#fips#, '#date#', '#cases#', '#deaths#')";
+          value = "(#fips#, '#date#', '#firstdose#', '#seriescomplete#')";
           values.Append(value);
         }
     
@@ -96,7 +96,7 @@
           // Send it up
           // item,item,item as a string
           list = values.ToList();
-          sql_query = "INSERT INTO covid_data (fips, date, daily_cases, daily_deaths) VALUES " & list
+          sql_query = "INSERT INTO covid_data (fips, date, series_complete, total_doses) VALUES " & list
           WriteOutput("Inserting this many rows:");
           cfdump(var=ArrayLen(values))
           myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
