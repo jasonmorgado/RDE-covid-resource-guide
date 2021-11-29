@@ -57,8 +57,8 @@
 }
 
 .map-overlay {
-  width  : 215px;
-  height : 320px;
+  width  : 220px;
+  height : 210px;
   background: rgba(35, 55, 75, 0.9);
   color: white;
   font-family: monospace;
