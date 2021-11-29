@@ -11,7 +11,7 @@ function CovidDataChart(props){
   const [rows, setRows] = useState([]);
   useEffect(() => {
     let params = `/'${startDate}'&'${endDate}'&('${fips}')`
-    fetch("http://localhost:8080/rest/metrics/CovidData/chart_data" + params)
+    fetch("http://3.92.224.99:8080/rest/metrics/CovidData/chart_data" + params)
       .then(response => response.json())
       .then(
         (json_string) => {

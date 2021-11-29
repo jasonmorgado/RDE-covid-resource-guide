@@ -97,7 +97,7 @@ function CovidDataTable(props) {
   function getCountyList(){
     // Returns a list of object/dicts containing county data
     // Format: [{"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"}]
-    fetch("http://localhost:8080/rest/metrics/CovidData/counties")
+    fetch("http://3.92.224.99:8080/rest/metrics/CovidData/counties")
       .then(response => response.json())
       .then(
         (json_string) => {
@@ -126,7 +126,7 @@ function CovidDataTable(props) {
     // Reformat countyList
     let fips_list = formatSQLArray(countyList);
     let parameters = "'" + startDate + "'&'" + endDate + "'&" + fips_list;
-    let URI = "http://localhost:8080/rest/metrics/CovidData/covid_sums/"+parameters;
+    let URI = "http://3.92.224.99:8080/rest/metrics/CovidData/covid_sums/"+parameters;
     // URI Confirmed working
     fetch(URI)
     .then(response => response.json())
