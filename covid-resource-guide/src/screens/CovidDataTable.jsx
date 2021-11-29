@@ -74,19 +74,21 @@ function CovidDataTable(props) {
           :null
       ));
       const table = (
-        <table>
-          <thead>
-            <tr>
-              <td>County</td>
-              <td>Sum Cases</td>
-              <td>Sum Deaths</td>
-              <td>Sum Recoveries</td>
-            </tr>
-          </thead>
-          <tbody>
-            {table_rows}
-          </tbody>
-        </table>
+        <div className="container">
+          <table>
+            <thead>
+              <tr>
+                <td>County</td>
+                <td>Sum Cases</td>
+                <td>Sum Deaths</td>
+                <td>Sum Recoveries</td>
+              </tr>
+            </thead>
+            <tbody>
+              {table_rows}
+            </tbody>
+          </table>
+        </div>
       )
       return table
     }else{
