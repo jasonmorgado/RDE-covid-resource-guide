@@ -29,7 +29,7 @@
 	},
 	"scripts": {
 		"start": "craco start",
-		"aws-start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem craco --openssl-legacy-provider start",
+		"aws-start": "craco --openssl-legacy-provider start",
 		"build": "craco build",
 		"test": "craco test",
 		"eject": "react-scripts eject"
