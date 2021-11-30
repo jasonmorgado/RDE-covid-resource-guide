@@ -1,57 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700');
+
 .App {
-    text-align: center;
-  }
+  text-align: center;
+}
 
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
+body {
+	font-family:'Source Sans Pro', sans-serif;
+	margin:0;
+}
 
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
+td, th {
+  padding-left: 50px;
+  padding-right: 50px;
+  text-align: center;
+}
 
-  .App-header {
-    background-color: #FFFFFF;
-    min-height: 100vh;
-      align-items: center;
-    justify-content: center;
-  }
+thead tr {
+  height: 40px;
+  background: #444444;
+  color: white;
+  font-size: 14px;
+}
 
-  .App-link {
-    color: #61dafb;
-  }
+tbody tr {
+  height: 32px;
+  box-shadow: 0 1px 0 0 rgba(22, 29, 37, 0.05);
+  font-size: 14px;
+}
 
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  table, th, td {
-    border: 1px solid black;
-    color: #000000
-  }
+#ChartsPage{
+  padding:10%;
+  padding-top:6%;
+  padding-bottom:6%;
+}
 
-  li, span {
-      color: #000000;
-      padding: 5px 15px;
-      font-size: 15px;
-  }
-
-  #ChartsPage{
-    padding:10%
-  }
-
-  #ChartsInput {
-    display:flex;
-    align-items:stretch;
-  }
+#ChartsInput {
+  display:flex;
+  align-items:stretch;
+}
 
   canvas {
     width: 50%;
