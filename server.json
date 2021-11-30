@@ -6,6 +6,10 @@
         "host":"0.0.0.0",
         "http":{
             "port":"8080"
+        },
+        "ssl":{
+          "certFile":"covid-resource-guide/certificate.crt",
+          "keyFile":"covid-resource-guide/private.key"
         }
     }
 }
