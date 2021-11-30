@@ -9,3 +9,4 @@ box.exe
 */node_modules/
 .DS_Store
 *.pem
+*.env
