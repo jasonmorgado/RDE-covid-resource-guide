@@ -1,15 +1,17 @@
 .map-container {
-  display: block;
-  position: absolute; 
-  top: 5.5%;
-  bottom: 0;
   height: 100%;
-  width: 100%;
   right: auto;
   left: auto;
+  width: 104%;
+  display: block;
+  position: absolute;
+  margin: -2%;
 }
 
 .sidebar {
+  display: flex;
+  justify-content: space-between;
+  align-items:stretch;
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
   padding: 6px 12px;
@@ -17,21 +19,25 @@
   z-index: 1;
   position: absolute;
   top: 60px;
-  left: 0;
+  left: 1%;
   margin: 12px;
   border-radius: 4px;
 }
 
 .centerbar{
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  flex: 2;
   background-color: rgba(35, 55, 75, 0.9);
   color: #fff;
   padding: 6px 12px;
   font-family: monospace;
   z-index: 1;
-  position: absolute;
-  top: 60px;
+  width: auto;
+  top: 8%;
   left: 42%;
-  margin: 12px;
+  margin: 1%;
   border-radius: 4px;
 }
 
@@ -73,6 +79,8 @@
 
 
  .data{
+  display:flex;
+  align-items:stretch;
   padding-left : 60px; 
   padding-right : 20px;   
   float:left;
@@ -89,9 +97,13 @@
   opacity: 1;
 }
 
-.date{
+#date{
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
   float: right;
-  right: 10%;
-  margin-right: 12px;
-  top: 60px;
+  right: 1%;
+  margin-top: 1%;
+  top: 8%;
+  z-index: 1;
 }
