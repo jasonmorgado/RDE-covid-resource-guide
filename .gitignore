@@ -8,3 +8,4 @@ box.exe
 *.py
 */node_modules/
 .DS_Store
+*.pem
