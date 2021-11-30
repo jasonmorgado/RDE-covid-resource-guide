@@ -26,30 +26,69 @@ function CovidDataTable(props) {
   const [countyDataList, setCountyDataList] = useState([]);
   const [countyMap, setCountyMap] = useState({});
 
+  function pad_with_zeroes(number, length) {
+
+    var my_string = '' + number;
+    while (my_string.length < length) {
+        my_string = '0' + my_string;
+    }
+
+    return my_string;
+
+}
+
+  function getCounty(fips){
+    fips = fips.trim()
+    fips = fips.padStart(5, "0");
+    // console.log(new_fips)
+    if (countyMap[fips]){
+      return countyMap[fips];
+    }else{
+      // console.log(new_fips)
+      return "SKIP";
+    }
+  }
+
+  function getRow(row){
+    return(
+      <tr key={row[0]}>
+        <td>{getCounty(row[0])}</td>
+        <td>{row[1]}</td>
+        <td>{row[2]}</td>
+        <td>{row[3]}</td>
+      </tr>
+    );
+
+  }
+
   function getTable(rows, countyMap){
-    if(rows && countyMap){
-      const table_rows = rows.map((row) =>
-        <tr key={row[0]}>
-          <td>{countyMap[row[0]]}</td>
-          <td>{row[1]}</td>
-          <td>{row[2]}</td>
-          <td>{row[3]}</td>
-        </tr>
-      );
+    if(Array.isArray(rows)){
+      const table_rows = rows.map((row) => (
+        getCounty(row[0]) != "SKIP"
+        ? (<tr key={row[0]}>
+            <td>{getCounty(row[0])}</td>
+            <td>{row[1]}</td>
+            <td>{row[2]}</td>
+            <td>{row[3]}</td>
+          </tr>)
+          :null
+      ));
       const table = (
-        <table>
-          <thead>
-            <tr>
-              <td>County</td>
-              <td>Sum Cases</td>
-              <td>Sum Deaths</td>
-              <td>Sum Recoveries</td>
-            </tr>
-          </thead>
-          <tbody>
-            {table_rows}
-          </tbody>
-        </table>
+        <div className="container">
+          <table>
+            <thead>
+              <tr>
+                <td>County</td>
+                <td>Sum Cases</td>
+                <td>Sum Deaths</td>
+                <td>Sum Recoveries</td>
+              </tr>
+            </thead>
+            <tbody>
+              {table_rows}
+            </tbody>
+          </table>
+        </div>
       )
       return table
     }else{
@@ -77,7 +116,7 @@ function CovidDataTable(props) {
   useEffect(() => {
     // Run when we have countyDataList
     let tempCountyMap = {};
-    for (let i = 0; i < countyDataList.length - 1; i++){
+    for (let i = 0; i < countyDataList.length; i++){
       let countyData = countyDataList[i];
       let fips = countyData.FIPS;
       let countyName = countyData.COUNTY;

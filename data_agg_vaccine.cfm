@@ -4,12 +4,13 @@
       // Main Aggregator Script, this gets called daily.
       ONCE_A_DAY = true;
       cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
-
+      /*
       if(days_since_update() < 1 AND ONCE_A_DAY){
         cfdump(var="Aggregator already ran today!");
         show_covid_data();
         return;
       }
+      */
       cfdump(var="Running Aggregator...");
       
       fetch_covid_data();
@@ -80,15 +81,16 @@
       while (NOT FileisEOF(covid_data_file)){
         line = FileReadLine(covid_data_file);
         line_data = listToArray(line, ',', true);
-        state = line_data[3];
+        //try naming values as stated in csv
+        state = line_data[5];
         fips = line_data[2];
         date = line_data[1];
-        seriescomplete = line_data[7];
-        firstdose = line_data[15];
+        Series_Complete_Yes = line_data[7];
+        Administered_Dose1_Recip = line_data[15];
     
         in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
         if (in_target_area AND fips != ""){
-          value = "(#fips#, '#date#', '#firstdose#', '#seriescomplete#')";
+          value = "(#fips#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
           values.Append(value);
         }
     
@@ -96,7 +98,8 @@
           // Send it up
           // item,item,item as a string
           list = values.ToList();
-          sql_query = "INSERT INTO covid_data (fips, date, series_complete, total_doses) VALUES " & list
+          //query values have to correlate with database
+          sql_query = "INSERT INTO coviddatabase.dbo.VaccineData (fips, date, series_complete, total_doses) VALUES " & list
           WriteOutput("Inserting this many rows:");
           cfdump(var=ArrayLen(values))
           myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
@@ -126,6 +129,15 @@
       yesterday = DateAdd('d',-1,Now())
       fileURL &= "&date=" & dateTimeFormat(yesterday, "yyyy-MM-dd");
       cfhttp(url=fileURL, method="GET", file="8xkx-amqh.json");
+    }
+
+    function catch_vaccine_data(){
+      fileURL = "https://data.cdc.gov/resource/8xkx-amqh.csv";
+      cfhttp(url=fileURL, method="GET", file="vaccinedatathings.csv");
+    }
+
+    function insert_vaccine_data(){
+
     }
     
     </cfscript>

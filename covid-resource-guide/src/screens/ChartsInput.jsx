@@ -15,7 +15,7 @@ function ChartsInput(props){
   ]);
   var location_data = {
       county_list: countyList,
-      selectedValues: [countyList[0]]
+      selected_values: [{"COUNTY": 'Bergen', "FIPS": "34023", "STATE":"New Jersey"}]
   };
 
   var metric_data = {
@@ -23,7 +23,8 @@ function ChartsInput(props){
       {id:0, name: "Daily Cases"}, {id:1, name:"Total Cases"},
       {id:2, name: "Daily Deaths"}, {id:3, name:"Total Deaths"},
       {id:4, name: "Daily Recoveries"}, {id:5, name:"Total Recoveries"},
-    ]
+    ],
+    selected_values : [{id:0, name: "Daily Cases"}]
   }
 
   function onSelectCounty(selectedList, selectedItem) {
@@ -46,7 +47,7 @@ function ChartsInput(props){
 
 
   // https://github.com/wojtekmaj/react-date-picker
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
   function onChangeStartDate(newDate){
     setStartDate(newDate); // For Calendar Input
@@ -79,6 +80,7 @@ function ChartsInput(props){
     passEndDate(endDateString);
     // Fetch County list
     getCountyList();
+    passMetrics(metric_data.selected_values.slice());
   }, [startDate, endDate, passStartDate, passEndDate]);
   // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
 
@@ -87,7 +89,7 @@ function ChartsInput(props){
 
     <Multiselect // Multi-Select Dropdown: https://reactjsexample.com/react-multiselect-dropdown-with-search-and-various-options/
       options={location_data.county_list} // Options to display in the dropdown
-      selectedValues={location_data.selectedValue} // Preselected value to persist in dropdown
+      selectedValues={location_data.selected_values} // Preselected value to persist in dropdown
       onSelect={onSelectCounty} // Function will trigger on select event
       onRemove={onRemoveCounty} // Function will trigger on remove event
       displayValue={"COUNTY"} // Property name to display in the dropdown options
@@ -97,7 +99,7 @@ function ChartsInput(props){
     />
     <Multiselect
       options={metric_data.metric_options} // Options to display in the dropdown
-      selectedValues={metric_data.selectedValue} // Preselected value to persist in dropdown
+      selectedValues={metric_data.selected_values} // Preselected value to persist in dropdown
       onSelect={onSelectMetric}
       onRemove={onRemoveMetric}
       displayValue={"name"} // Property name to display in the dropdown options

@@ -20,7 +20,7 @@ function CovidDataChart(props){
           setRows(data_rows);
         }
       )
-  }, [startDate, endDate, fips]);
+  }, [startDate, endDate, fips, metrics]);
 
   var datasets = [
     {
@@ -107,7 +107,7 @@ function CovidDataChart(props){
     },
     title:{
       display:true,
-      text: countyName
+      text: countyName + " County"
     },
   };
   // Map Selected metrics to their datasets, put in graph
@@ -117,8 +117,6 @@ function CovidDataChart(props){
     let dataset = datasets[metric_id];
     data.datasets.push(dataset);
   }
-
-
   return <Line data={data} legend={legend} options={options} />;
 
 }

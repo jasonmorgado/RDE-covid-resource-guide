@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import shapes from './tristate_county_shapes.json';
 import { ListCases } from './ListCases.js';
 import { ListRecoveries } from './ListRecoveries';
 import { ListDeaths } from './ListDeaths';
 import DatePicker from 'react-date-picker';
+import './HeatMap.css';
 
 const ck = require('ckey');
 mapboxgl.accessToken = ck.REACT_APP_access_token;
@@ -33,7 +35,7 @@ export default function App() {
 
   const [max, steMax] = useState(0);
 
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
   
   function DisplayCases() {
@@ -65,37 +67,28 @@ export default function App() {
 
   //Calculate the color for layer according to the argument d
   function ColorCases(d, max) {
-    let num = max/8;
-    return d > max ? '#800026' :
-           d > (num + num + num + num + num + num)  ? '#BD0026' :
-           d > (num + num + num + num + num)  ? '#E31A1C' :
-           d > (num + num + num + num)  ? '#FC4E2A' :
-           d > (num + num + num)   ? '#FD8D3C' :
-           d > (num + num)   ? '#FEB24C' :
-           d > (num)   ? '#FED976' :
-                      '#FFEDA0';
+    let num = max/22;
+    return d >= max ? '#a63603' :
+           d > (num + num + num)  ? '#e6550d' :
+           d > (num + num)   ? '#fd8d3c' :
+           d > (num)   ? '#fdbe85' :
+                      '#feedde';
   }
   function ColorRecoveries(d, max) {
-    let num = max/8;
-    return d > max ? '#005824' :
-           d > (num + num + num + num + num + num + num)  ? '#238b45' :
-           d > (num + num + num + num + num)  ? '#41ae76' :
-           d > (num + num + num + num)  ? '#66c2a4' :
-           d > (num + num + num)  ? '#99d8c9' :
-           d > (num + num)  ? '#ccece6' :
-           d > (num)   ? '#e5f5f9' :
-                      '#f7fcfd';
+    let num = max/22;
+    return d > max ? '#006d2c' :
+           d > (num + num + num)  ? '#31a354' :
+           d > (num + num)  ? '#74c476' :
+           d > (num)  ? '#bae4b3' :
+                      '#edf8e9';
   }
   function ColorDeaths(d, max) {
-    let num = max/8;
-    return d > max ? '#99000d' :
-           d > (num + num + num + num + num + num + num)  ? '#cb181d' :
-           d > (num + num + num + num + num)   ? '#ef3b2c' :
-           d > (num + num + num + num)  ? '#fb6a4a' :
-           d > (num + num + num)   ? '#fc9272' :
-           d > (num + num)  ? '#fcbba1' :
-           d > (num)  ? '#fee0d2' :
-                      '#fff5f0';
+    let num = max/22;
+    return d > max ? '#a50f15' :
+           d > (num + num + num)  ? '#de2d26' :
+           d > (num + num)  ? '#fb6a4a' :
+           d > (num)  ? '#fcae91' :
+                      '#fee5d9';
   }
   
   //Find which index is county data is stored in the array 
@@ -132,18 +125,13 @@ export default function App() {
       end = "" + end.toISOString().split("T")[0];
     }
 
-    console.log("Start: " + start);
-    console.log("End: " + end);
     fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
-
           let data_rows = json_data.DATA;
-          const fips = data_rows.FIPS;
           
-          console.log(data_rows);
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
           setCases(data_rows.SUM_CASES);
@@ -200,6 +188,12 @@ export default function App() {
       zoom: zoom
     });
 
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+
     
     map.on('load', async () => {
 
@@ -209,7 +203,6 @@ export default function App() {
         for (const feature of shapes.features) {
           const countyid = feature.properties.COUNTY;
           const stateid = feature.properties.STATE;
-          const county_name = feature.properties.NAME;
           let source;
           let color;
           let show;
@@ -231,9 +224,9 @@ export default function App() {
             color = ColorDeaths(deaths[i], max);
             show = deaths[i];
           }
-                    
+          
           //If county data is found in the databse 
-          if(i){
+          if(i !== undefined){
             source = stateid + countyid + "&" + show;
           }
           //No county data is found 
@@ -259,7 +252,7 @@ export default function App() {
             'layout': {},
             'paint': {
               'fill-color': color, 
-              'fill-opacity': 0.5
+              'fill-opacity': 1
               }
           });
 
@@ -270,8 +263,8 @@ export default function App() {
             'source': source,
             'layout': {},
             'paint': {
-              'line-color': '#000',
-              'line-width': 2
+              'line-color': 'black',
+              'line-width': 2,
             }
           });
 
@@ -298,7 +291,7 @@ export default function App() {
         display.forEach((prop) => {
           displayFeat[prop] = feat[prop];
         });
-        
+
         var data = displayFeat.source;
         data = data.split("&");
         display_data = data[1];
@@ -324,6 +317,16 @@ export default function App() {
     return (
       
           <div>
+            <div>
+              <div ref={mapContainer} className="map-container" />
+            </div>
+            
+            <div className="centerbar" id="options">
+              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
+            </div>
+
+            <div className="sidebar" id="name"></div>
+
             <div className="date">
               <DatePicker
                 onChange={onChangeStartDate}
@@ -335,15 +338,8 @@ export default function App() {
               />
             </div>
 
-            <div className="centerbar" id="options">
-              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
-            </div>
-
-            <div className="sidebar" id="name"></div>
-            <div ref={mapContainer} className="map-container" />
-
             {showTable === true ?(
-              <div class='map-overlay' id='legend'>
+              <div id='legend'>
                 <p>
                   {showCases === true ?(
                     <ListCases max={max} getcolor={ColorCases}/>

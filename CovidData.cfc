@@ -53,6 +53,7 @@ component restpath="/CovidData"  rest="true" {
 
         county_list.append(county_data)
       }
+      FileClose(county_data_file);
     //dict = {county_list=county_list}
     returnVal = SerializeJSON(county_list);
 
@@ -80,13 +81,14 @@ component restpath="/CovidData"  rest="true" {
       sql_query = Replace(sql_query, "{END_DATE}", end_date);
 
       // If we passed a non-empty county_list, filter by that too
-      if (county_list != "()"){
-        sql_query = Replace(sql_query, "1=1", "covid_data.fips IN " & county_list);
-      }
+      // if (county_list != "()"){
+      //   sql_query = Replace(sql_query, "1=1", "covid_data.fips IN " & county_list);
+      // }
+      // Commenting this makes it so always returns full dataset
 
       // Get rows
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
-      query_string = SerializeJSON(myQuery, true);
+      query_string = SerializeJSON(myQuery, false);
 
       // CORS header
       cfheader(name="Access-Control-Allow-Origin", value="*");
