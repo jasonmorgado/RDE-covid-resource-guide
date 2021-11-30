@@ -61,7 +61,7 @@ function ChartsInput(props){
   }
 
   function getCountyList(){
-    fetch("https://54.224.113.88:8080/rest/metrics/CovidData/counties")
+    fetch("http://54.224.113.88:8080/rest/metrics/CovidData/counties")
       .then(response => response.json())
       .then(
         (json_string) => {
