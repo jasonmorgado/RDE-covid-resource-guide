@@ -125,7 +125,7 @@ export default function App() {
       end = "" + end.toISOString().split("T")[0];
     }
 
-    fetch("http://3.92.224.99:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
+    fetch("http://54.224.113.88:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
