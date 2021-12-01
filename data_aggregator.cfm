@@ -73,7 +73,7 @@ function update_county_data(){
     population = line_data[3]
     // Don't forget quotation marks on strings! Not passed over like Python.
     //value = "(#fips#, '#county#', '#state#', '0')";
-        value = "(#fips#, '#county#', '0')";
+    value = "(#fips#, '#county#', '0')";
 
     values.Append(value);
   }
