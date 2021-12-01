@@ -321,14 +321,8 @@ export default function App() {
             <div>
               <div ref={mapContainer} className="map-container" />
             </div>
-            
-            <div className="centerbar" id="options">
-              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
-            </div>
 
-            <div className="sidebar" id="name"></div>
-
-            <div className="date">
+            <div id="date">
               <DatePicker
                 onChange={onChangeStartDate}
                 value={startDate}
@@ -338,6 +332,12 @@ export default function App() {
                 value={endDate}
               />
             </div>
+            
+            <div className="centerbar" id="options">
+              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
+            </div>
+
+            <div className="sidebar" id="name"></div>
 
             {showTable === true ?(
               <div id='legend'>
