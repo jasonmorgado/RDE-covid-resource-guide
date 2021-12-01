@@ -19,7 +19,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [recoveries, setRecoveries] = useState([]);
+  const [vaccines, setVaccines] = useState([]);
   
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
@@ -31,7 +31,7 @@ export default function App() {
   const [endDate, setEndDate] = useState(new Date());
 
   //Calculate the color for layer according to the argument d
-  function ColorRecoveries(d, max) {
+  function ColorVax(d, max) {
     let num = max/22;
     return d > max ? '#006d2c' :
            d > (num + num + num)  ? '#31a354' :
@@ -74,7 +74,7 @@ export default function App() {
       end = "" + end.toISOString().split("T")[0];
     }
 
-    fetch("http://localhost:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
+    fetch("http://localhost:8080/rest/metrics/CovidData/covid_vax_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
@@ -82,7 +82,7 @@ export default function App() {
           let data_rows = json_data.DATA;
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
-          setRecoveries(data_rows.SUM_RECOVERIES);        //vaccniation array here
+          setVaccines(data_rows.SERIES_COMPLETE);        //vaccniation array here
           setIsLoaded(true);
           return;
         },
@@ -155,9 +155,9 @@ export default function App() {
 
           let i = getindex(countyid, stateid);
           
-          steMax(Math.max(...recoveries));                //vaccination array here
-          color = ColorRecoveries(recoveries[i], max);    //vaccination array here
-          show = recoveries[i];                           //vaccination array here
+          steMax(Math.max(...vaccines));                //vaccination array here
+          color = ColorVax(vaccines[i], max);    //vaccination array here
+          show = vaccines[i];                           //vaccination array here
           
           //If county data is found in the databse 
           if(i !== undefined){
@@ -202,7 +202,7 @@ export default function App() {
             }
           });
 
-          if(recoveries.length !== 0){
+          if(vaccines.length !== 0){
             setshowTable(true);
           }
           //if no data is avalable dont show the table
@@ -232,7 +232,7 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
-            document.getElementById('name').innerHTML = county_name + "<br>" + "Recoveries: " + display_data;
+            document.getElementById('name').innerHTML = county_name + "<br>" + "Vaccines: " + display_data;
           }
       });
     });
