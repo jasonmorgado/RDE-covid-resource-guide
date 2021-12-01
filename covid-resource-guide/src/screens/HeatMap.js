@@ -298,6 +298,7 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
+          display_data = display_data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           if(showCases === true){
             document.getElementById('name').innerHTML = county_name + "<br>" + "Cases: " + display_data;
           }
