@@ -99,7 +99,7 @@
           // item,item,item as a string
           list = values.ToList();
           //query values have to correlate with database
-          sql_query = "INSERT INTO coviddatabase.dbo.VaccineData (fips, date, series_complete, total_doses) VALUES " & list
+          sql_query = "INSERT INTO coviddatabase.dbo.VaccineData (fips, date, series_complete, total_doses) VALUES " & list;
           WriteOutput("Inserting this many rows:");
           cfdump(var=ArrayLen(values))
           myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});

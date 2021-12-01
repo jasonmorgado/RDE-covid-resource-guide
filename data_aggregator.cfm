@@ -14,8 +14,8 @@ function run_aggregator(){
   */
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
-  update_county_data();
   fetch_covid_data();
+  update_county_data();
   insert_covid_data();
   calculate_covid_stats();
   update_county_data();
@@ -42,7 +42,8 @@ function fetch_covid_data(){
   // Sourced from NYTimes' GitHub repo.
   fileURL = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
   cfhttp(url=fileURL, method="GET", file="us-counties(all).csv");
-}
+  fileURL = "https://data.cdc.gov/resource/8xkx-amqh.csv";
+  cfhttp(url=fileURL, method="GET", file="vaccinedatathings.csv");}
 
 function drop_table(table_name){
   sql_query = "DELETE FROM #table_name#"
@@ -58,26 +59,32 @@ function ignore_dups(table_name){
 function update_county_data(){
   // Takes counties from county_data.csv and uploads to DB
   // Only called once to ready the DB.
-  ignore_dups("counties");
-  county_data_file = FileOpen("CountyList.csv", "read");
+  ignore_dups("coviddatabase.dbo.counties");
+  county_data_file = FileOpen("us-counties(all).csv", "read");
   values = []
   while (NOT FileisEOF(county_data_file)){
     line = FileReadLine(county_data_file);
-    line_data = listToArray(line, ',');
+    line_data = listToArray(line, ',',true);
     //cfdump(var=line_data);
-    fips = NumberFormat(line_data[1], "00000");
+    //fips = numberFormat(line_data[4], "00000");
+    fips = line_data[4];
     county = line_data[2];
-    //state = line_data[3];
+    state = line_data[3];
     population = line_data[3]
     // Don't forget quotation marks on strings! Not passed over like Python.
-    value = "(#fips#, '#county#', '#state#', '0')";
+    //value = "(#fips#, '#county#', '#state#', '0')";
+        value = "(#fips#, '#county#', '0')";
+
     values.Append(value);
   }
 
   writeOutput("<br>Writing counties to DB:");
-  sql_query = "INSERT INTO coviddatabase.dbo.counties (fips, county_name, state, population) VALUES " & list
+  list = values.ToList();
+  sql_query = "INSERT INTO coviddatabase.dbo.counties (fips, county_name, population) VALUES " & list
   myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
   cfdump(var=myQuery);
+  values = [];
+  list = [];
 }
 
 function show_covid_data(){
@@ -106,7 +113,7 @@ function insert_covid_data(){
   // Uses data from NYTimes' Repo "us-counties.csv"
   // Inserts rows into DB with cases, deaths
   // Table is currently configured to ignore duplicate values
-  ignore_dups("covid_data");
+  ignore_dups("coviddatabase.dbo.CovidData");
   covid_data_file = FileOpen("us-counties(all).csv", "read");
   values = []
   target_fips_list = get_fips_list();
@@ -157,6 +164,46 @@ function calculate_covid_stats(){
   show_covid_data();
 }
 
+    function insert_vax_data(){
+      // Uses data from NYTimes' Repo "us-counties.csv"
+      // Inserts rows into DB with cases, deaths
+      // Table is currently configured to ignore duplicate values
+      ignore_dups("coviddatabase.dbo.VaccineData");
+      covid_data_file = FileOpen("vaccinedatathings.csv", "read");
+      values = []
+      while (NOT FileisEOF(covid_data_file)){
+        line = FileReadLine(covid_data_file);
+        line_data = listToArray(line, ',', true);
+        //try naming values as stated in csv
+        state = line_data[5];
+        fips = line_data[2];
+        date = line_data[1];
+        Series_Complete_Yes = line_data[7];
+        Administered_Dose1_Recip = line_data[15];
+    
+        in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
+        if (in_target_area AND fips != ""){
+          value = "(#fips#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
+          values.Append(value);
+        }
+    
+        if(ArrayLen(values) == 999 OR FileisEOF(covid_data_file)){
+          // Send it up
+          // item,item,item as a string
+          list = values.ToList();
+          //query values have to correlate with database
+          sql_query = "INSERT INTO coviddatabase.dbo.VaccineData (fips, date, series_complete, total_doses) VALUES " & list;
+          WriteOutput("Inserting this many rows:");
+          cfdump(var=ArrayLen(values))
+          myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
+          values = [];
+          list = [];
+        }
+      }
+    
+      // Entire file sent to DB
+      FileClose(covid_data_file);
+    }
 
 function fetch_vaccine_data(){
   // Fetches json file containing yesterday's Vaccine data by county for NJ/NY/CT

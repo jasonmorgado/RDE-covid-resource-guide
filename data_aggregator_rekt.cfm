@@ -14,10 +14,10 @@ function run_aggregator(){
   */
   cfdump(var="Running Aggregator...");
   cffile(action="write", file="last_ran_aggregator.log" output=#dateTimeFormat(now(), "yyyy.MM.dd HH:nn:ss ") #);
-  clear_covid_data();
+  //clear_covid_data();
   fetch_covid_data();
-  //insert_covid_data();
-  //calculate_covid_stats();
+  insert_covid_data();
+  calculate_covid_stats();
   update_county_data();
   // fetch_vaccine_data();
   // More aggregation scripts here
