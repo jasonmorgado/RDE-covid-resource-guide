@@ -6,6 +6,18 @@
         "host":"0.0.0.0",
         "http":{
             "port":"8080"
+        },
+        "ssl":{
+          "enable": true,
+          "port": "8080",
+          "certFile":"covid-resource-guide/certificate.crt",
+          "keyFile":"covid-resource-guide/private.key",
+          "forceSSLRedirect": true,
+          "HSTS": {
+            "enable": true,
+            "maxAge": 31536000,
+            "includeSubDomains":true
+          }
         }
     }
 }
