@@ -9,7 +9,6 @@ import DatePicker from 'react-date-picker';
 import './HeatMap.css';
 
 const ck = require('ckey');
-console.log(ck);
 mapboxgl.accessToken = ck.REACT_APP_access_token;
 
 export default function App() {
