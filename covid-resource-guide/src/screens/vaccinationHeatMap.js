@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -271,7 +270,6 @@ export default function App() {
        
     );
 }
-
 
 /*
 import React, { useRef, useEffect, useState } from 'react';
