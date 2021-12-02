@@ -265,9 +265,8 @@ export default function App() {
               <div ref={mapContainer} className="map-container" />
             </div>
 
-            <div className="sidebar" id="name"></div>
 
-            <div className="date">
+            <div id="date">
               <DatePicker
                 onChange={onChangeStartDate}
                 value={startDate}
@@ -277,6 +276,8 @@ export default function App() {
                 value={endDate}
               />
             </div>
+            <div className="sidebar" id="name"></div>
+
             <div></div>
             {showTable === true ?(
               <div id='legend'>
