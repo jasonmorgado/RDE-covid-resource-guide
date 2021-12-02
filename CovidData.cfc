@@ -142,28 +142,4 @@ component restpath="/CovidData"  rest="true" {
       cfheader(name="Access-Control-Allow-Origin", value="*");
       return query_string
     }
-
-    remote string function getVaxmapSums(
-            required string start_date restargsource="Path",
-            required string end_date restargsource="Path",
-            ) httpmethod="GET" restpath="covid_vax_sums/{start_date}&{end_date}"
-    {
-      // URL is: "http://localhost:8080/rest/metrics/CovidData/covid_vax_sums/{start_date}&{end_date}
-      // Dates are in YYYY-MM-DD format, fips_list is in ('00000', '12345')
-      // Leave fips_list as () to disable filtering
-
-      // Generate SQL Query
-      cffile(action="read", file="vaxmap_query.sql", variable="sql_query");
-      sql_query = Replace(sql_query, "{START_DATE}", start_date);
-      sql_query = Replace(sql_query, "{END_DATE}", end_date);
-
-
-      // Get rows
-      myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
-      query_string = SerializeJSON(myQuery, true);
-
-      // CORS header
-      cfheader(name="Access-Control-Allow-Origin", value="*");
-      return query_string
-    }
 }
