@@ -57,7 +57,7 @@ export default function App() {
       if(county[i] === countyid){
         if(state[i] === stateid){
           index = i;
-          console.log(index);
+          //console.log(index);
           return index;
         }
       }

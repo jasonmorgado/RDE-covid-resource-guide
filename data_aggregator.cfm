@@ -162,6 +162,7 @@ function insert_covid_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
+      cfdump(list);
       sql_query = "INSERT INTO covid_data (fips, date, total_cases, total_deaths) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
@@ -202,8 +203,8 @@ function insert_vax_data(){
     Series_Complete_Yes = line_data[7];
     Administered_Dose1_Recip = line_data[15];
 
-    //in_target_area = arrayContains(target_fips_list, fips);
-    in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
+    in_target_area = arrayContains(target_fips_list, fips);
+    //in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
 
     if (in_target_area){
       value = "(#NumberFormat(fips, "00000")#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
@@ -228,7 +229,7 @@ function insert_vax_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
-      WriteOutput(list);
+      cfdump(list);
       //query values have to correlate with database
       //sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
       sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
