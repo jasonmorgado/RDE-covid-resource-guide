@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import shapes from './tristate_county_shapes.json';
+import shapes from './tristate_shapes.json';
 import { ListVaccines } from './ListVaccines';
 import DatePicker from 'react-date-picker';
 import './HeatMap.css';
@@ -94,9 +94,11 @@ export default function App() {
           console.log(data_rows);
 
           setCounty(data_rows.COUNTY_CODE);
+          //console.log(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
           setVaccines(data_rows.SERIES_COMPLETE);        //vaccniation array here
           setIsLoaded(true);
+          console.log(data_rows.COUNTY_CODE, data_rows.STATE_CODE);
           return;
         },
         (error) => {
@@ -168,7 +170,8 @@ export default function App() {
           let show;
 
           let i = getindex(countyid, stateid);
-          
+          console.log(i);
+          console.log(countyid, stateid);
           if(showVaccines === true){
             steMax(Math.max(...vaccines));                //vaccination array here
             
