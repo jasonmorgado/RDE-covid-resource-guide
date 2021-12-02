@@ -63,7 +63,7 @@
 }
 
 .map-overlay {
-  width  : 220px;
+  width  : 250px;
   height : 210px;
   background: rgba(35, 55, 75, 0.9);
   color: white;
@@ -71,7 +71,7 @@
   position: fixed;
   align-items:stretch;
   display: inline-block;
-  left: 84%;
+  left: 81%;
   bottom: 4%;
   z-index: 99;
   padding: 1%;
