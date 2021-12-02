@@ -250,6 +250,7 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
+            display_data = display_data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById('name').innerHTML = county_name + "<br>" + "Vaccines: " + display_data;
           }
       });
