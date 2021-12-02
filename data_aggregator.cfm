@@ -22,7 +22,7 @@ function run_aggregator(){
   calculate_covid_stats();
 
   //update_county_data();
-  insert_vax_data();
+  //insert_vax_data();
   // fetch_vaccine_data();
   // More aggregation scripts here
 }
@@ -207,12 +207,12 @@ function insert_vax_data(){
     //in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
 
     if (in_target_area){
-      value = "(#NumberFormat(fips, "00000")#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
+      value = "('#date#', #NumberFormat(fips, "00000")#, '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
       values.Append(value);
     } else if(line_data[2] == "New York City") {
       nyc_counties = [36085, 36047, 36081, 36061, 36005]
       for (fips in nyc_counties){
-        value = "(#fips#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
+        value = "('#date#', #fips#, '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
         values.Append(value);
       }
     }
@@ -230,9 +230,9 @@ function insert_vax_data(){
       // item,item,item as a string
       list = values.ToList();
       cfdump(list);
+      cfdump(values)
       //query values have to correlate with database
-      //sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
-      sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
+      sql_query = "INSERT INTO vaccineData (date, fips, series_complete, total_doses) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});

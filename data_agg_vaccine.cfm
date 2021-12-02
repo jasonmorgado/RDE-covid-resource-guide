@@ -36,7 +36,7 @@
       // Fetches csv file containing today's Covid Cases/Deaths by county.
       // Sourced from NYTimes' GitHub repo.
       fileURL = "https://data.cdc.gov/resource/8xkx-amqh.csv";
-      cfhttp(url=fileURL, method="GET", file="vaccinedatathings.csv");
+      cfhttp(url=fileURL, method="GET", file="vaccineyike.csv");
     }
     
     function update_county_data(){
