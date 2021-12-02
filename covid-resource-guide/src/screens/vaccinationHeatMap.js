@@ -31,15 +31,25 @@ export default function App() {
   const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
 
-
+  /*
   //Calculate the color for layer according to the argument d
   function ColorVax(d, max) {
-    let num = max/22;
+    let num = max/30;
     return d > max ? '#006d2c' :
            d > (num + num + num)  ? '#31a354' :
            d > (num + num)  ? '#74c476' :
            d > (num)  ? '#bae4b3' :
                       '#edf8e9';
+  }
+  */
+  //Calculate the color for layer according to the argument d
+  function ColorVax(d, max) {
+    let num = max/15;
+    return d > max ? '#FF0000' :
+           d > (num + num + num)  ? '#FF7F00' :
+           d > (num + num)  ? '#FFFF00' :
+           d > (num)  ? '#00FF00' :
+                      '#0000FF';
   }
   
   //Find which index is county data is stored in the array 
