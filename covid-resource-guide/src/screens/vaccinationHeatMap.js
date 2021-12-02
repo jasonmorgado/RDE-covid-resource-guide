@@ -31,14 +31,6 @@ export default function App() {
   const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
 
-  
-  function DisplayVaccines(){
-    setshowVaccines(true);
-    //document.getElementById('vaccines').classList.add('seleact');
-  }
-  
-  //setshowVaccines(true);
-  //document.getElementById('vaccines').classList.add('seleact');
 
   //Calculate the color for layer according to the argument d
   function ColorVax(d, max) {
@@ -94,11 +86,9 @@ export default function App() {
           console.log(data_rows);
 
           setCounty(data_rows.COUNTY_CODE);
-          //console.log(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
-          setVaccines(data_rows.SERIES_COMPLETE);        //vaccniation array here
+          setVaccines(data_rows.SERIES_COMPLETE);       
           setIsLoaded(true);
-          console.log(data_rows.COUNTY_CODE, data_rows.STATE_CODE);
           return;
         },
         (error) => {
@@ -138,7 +128,6 @@ export default function App() {
     //Getting the data for the first time when the page is loaded
     if(data === false){
       getdata(startDate, endDate);
-      console.log(getdata(startDate, endDate));
       setData(true);
     }
 
@@ -170,13 +159,12 @@ export default function App() {
           let show;
 
           let i = getindex(countyid, stateid);
-          console.log(i);
-          console.log(countyid, stateid);
+
           if(showVaccines === true){
-            steMax(Math.max(...vaccines));                //vaccination array here
+            steMax(Math.max(...vaccines));                
             
-            color = ColorVax(vaccines[i], max);    //vaccination array here
-            show = vaccines[i];                           //vaccination array here
+            color = ColorVax(vaccines[i], max);    
+            show = vaccines[i];                           
           }
           
 
