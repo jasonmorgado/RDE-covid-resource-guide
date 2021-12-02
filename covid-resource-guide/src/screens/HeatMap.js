@@ -131,7 +131,7 @@ export default function App() {
         (json_string) => {
           let json_data = JSON.parse(json_string);
           let data_rows = json_data.DATA;
-          
+          console.log(data_rows);
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
           setCases(data_rows.SUM_CASES);

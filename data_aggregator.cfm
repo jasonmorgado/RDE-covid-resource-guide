@@ -22,7 +22,7 @@ function run_aggregator(){
   calculate_covid_stats();
 
   //update_county_data();
-  //insert_vax_data();
+  insert_vax_data();
   // fetch_vaccine_data();
   // More aggregation scripts here
 }
@@ -202,7 +202,9 @@ function insert_vax_data(){
     Series_Complete_Yes = line_data[7];
     Administered_Dose1_Recip = line_data[15];
 
-    in_target_area = arrayContains(target_fips_list, fips);
+    //in_target_area = arrayContains(target_fips_list, fips);
+    in_target_area = arrayContains(["New Jersey", "New York", "Connecticut"], state);
+
     if (in_target_area){
       value = "(#NumberFormat(fips, "00000")#, '#date#', '#Series_Complete_Yes#', '#Administered_Dose1_Recip#')";
       values.Append(value);
@@ -226,9 +228,10 @@ function insert_vax_data(){
       // Send it up
       // item,item,item as a string
       list = values.ToList();
+      WriteOutput(list);
       //query values have to correlate with database
       //sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
-      sql_query = "INSERT INTO vaccineData (fips, date, total_cases, total_deaths) VALUES " & list
+      sql_query = "INSERT INTO vaccineData (fips, date, series_complete, total_doses) VALUES " & list
       WriteOutput("Inserting this many rows:");
       cfdump(var=ArrayLen(values))
       myQuery = queryExecute(sql=sql_query, options={datasource="covid_database"});
