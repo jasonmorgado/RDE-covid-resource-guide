@@ -4,6 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import TestingLocations from "./screens/TestingLocations";
 import HeatMap from "./screens/HeatMap.js";
 import Reports from "./screens/ChartsPage.jsx";
+import Vaccination from "./screens/vaccinationHeatMap.js"
 
 
 const NotFound = () => {
@@ -30,6 +31,7 @@ export default function routes() {
         <Route path="/heatMap" element={<HeatMap />} />
         <Route path="/testingLocations" element={<TestingLocations />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/vaccinationHeatMap" element={<Vaccination />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
