@@ -75,7 +75,22 @@
   bottom: 4%;
   z-index: 99;
   padding: 1%;
-} 
+}
+
+.map-overlayvax {
+  width  : 250px;
+  height : 455px;
+  background: rgba(35, 55, 75, 0.9);
+  color: white;
+  font-family: monospace;
+  position: fixed;
+  align-items:stretch;
+  display: inline-block;
+  left: 81%;
+  bottom: 8%;
+  z-index: 99;
+  padding: 1%;
+}
 
 
  .data{

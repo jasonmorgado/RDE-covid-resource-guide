@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import shapes from './tristate_county_shapes.json';
+import shapes from './tristate_shapes.json';
 import { ListVaccines } from './ListVaccines';
 import DatePicker from 'react-date-picker';
 import './HeatMap.css';
@@ -31,23 +31,29 @@ export default function App() {
   const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
 
-  
-  function DisplayVaccines(){
-    setshowVaccines(true);
-    //document.getElementById('vaccines').classList.add('seleact');
-  }
-  
-  //setshowVaccines(true);
-  //document.getElementById('vaccines').classList.add('seleact');
-
+  /*
   //Calculate the color for layer according to the argument d
   function ColorVax(d, max) {
-    let num = max/22;
+    let num = max/30;
     return d > max ? '#006d2c' :
            d > (num + num + num)  ? '#31a354' :
            d > (num + num)  ? '#74c476' :
            d > (num)  ? '#bae4b3' :
                       '#edf8e9';
+  }
+  */
+  //Calculate the color for layer according to the argument d
+  function ColorVax(d, max) {
+    let num = max/9;
+    return d > max ? '#081d58' :
+           d > (num + num + num + num + num + num + num)  ? '#253494' :
+           d > (num + num + num + num + num + num)  ? '#225ea8' :
+           d > (num + num + num + num + num)  ? '#1d91c0' :
+           d > (num + num + num + num)  ? '#41b6c4' :
+           d > (num + num + num)  ? '#7fcdbb' :
+           d > (num + num) ? '#c7e9b4' :
+           d> (num) ? '#edf8b1' :
+                      '#ffffd9';
   }
   
   //Find which index is county data is stored in the array 
@@ -95,7 +101,7 @@ export default function App() {
 
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
-          setVaccines(data_rows.SERIES_COMPLETE);        //vaccniation array here
+          setVaccines(data_rows.SERIES_COMPLETE);       
           setIsLoaded(true);
           return;
         },
@@ -136,7 +142,6 @@ export default function App() {
     //Getting the data for the first time when the page is loaded
     if(data === false){
       getdata(startDate, endDate);
-      console.log(getdata(startDate, endDate));
       setData(true);
     }
 
@@ -168,12 +173,12 @@ export default function App() {
           let show;
 
           let i = getindex(countyid, stateid);
-          
+
           if(showVaccines === true){
-            steMax(Math.max(...vaccines));                //vaccination array here
+            steMax(Math.max(...vaccines));                
             
-            color = ColorVax(vaccines[i], max);    //vaccination array here
-            show = vaccines[i];                           //vaccination array here
+            color = ColorVax(vaccines[i], max);    
+            show = vaccines[i];                           
           }
           
 

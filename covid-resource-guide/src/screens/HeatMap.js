@@ -134,6 +134,7 @@ export default function App() {
           console.log(data_rows);
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
+          console.log(data_rows.COUNTY_CODE, data_rows.STATE_CODE);
           setCases(data_rows.SUM_CASES);
           setRecoveries(data_rows.SUM_RECOVERIES);
           setDeaths(data_rows.SUM_DEATHS);
@@ -208,7 +209,8 @@ export default function App() {
           let show;
 
           let i = getindex(countyid, stateid);
-          
+          console.log(i);
+          console.log(countyid,stateid);
           if(showCases === true){
             steMax(Math.max(...cases));
             color = ColorCases(cases[i], max);
