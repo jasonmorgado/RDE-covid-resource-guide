@@ -44,12 +44,16 @@ export default function App() {
   */
   //Calculate the color for layer according to the argument d
   function ColorVax(d, max) {
-    let num = max/15;
-    return d > max ? '#FF0000' :
-           d > (num + num + num)  ? '#FF7F00' :
-           d > (num + num)  ? '#FFFF00' :
-           d > (num)  ? '#00FF00' :
-                      '#0000FF';
+    let num = max/9;
+    return d > max ? '#081d58' :
+           d > (num + num + num + num + num + num + num)  ? '#253494' :
+           d > (num + num + num + num + num + num)  ? '#225ea8' :
+           d > (num + num + num + num + num)  ? '#1d91c0' :
+           d > (num + num + num + num)  ? '#41b6c4' :
+           d > (num + num + num)  ? '#7fcdbb' :
+           d > (num + num) ? '#c7e9b4' :
+           d> (num) ? '#edf8b1' :
+                      '#ffffd9';
   }
   
   //Find which index is county data is stored in the array 
