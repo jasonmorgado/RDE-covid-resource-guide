@@ -1,10 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import shapes from './tristate_county_shapes.json';
-import { ListCases } from './ListCases.js';
-import { ListRecoveries } from './ListRecoveries';
-import { ListDeaths } from './ListDeaths';
+import shapes from './tristate_shapes.json';
+import { ListVaccines } from './ListVaccines';
 import DatePicker from 'react-date-picker';
 import './HeatMap.css';
 
@@ -21,74 +19,41 @@ export default function App() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [cases, setCases] = useState([]);
-  const [deaths, setDeaths] = useState([]);
-  const [recoveries, setRecoveries] = useState([]);
+  const [vaccines, setVaccines] = useState([]);
   
   const [county, setCounty] = useState([]);
   const [state, setState] = useState([]);
-
-  const [showCases, setshowCases] = useState(true);
-  const [showRecoveries, setshowRecoveries] = useState(false);
-  const [showDeaths, setshowDeaths] = useState(false);
+  const [showVaccines, setshowVaccines] = useState(true);
   const [showTable, setshowTable] = useState(false);
 
   const [max, steMax] = useState(0);
 
   const [startDate, setStartDate] = useState(new Date("01 January 2020 12:00 UTC"));
   const [endDate, setEndDate] = useState(new Date());
-  
-  function DisplayCases() {
-    setshowCases(true);
-    setshowRecoveries(false);
-    setshowDeaths(false);
-    document.getElementById('cases').classList.add('seleact');
-    document.getElementById('recoveries').classList.remove('seleact');
-    document.getElementById('deaths').classList.remove('seleact');
-  }
 
-  function DisplayRecoveries() {
-    setshowCases(false);
-    setshowRecoveries(true);
-    setshowDeaths(false);
-    document.getElementById('recoveries').classList.add('seleact');
-    document.getElementById('cases').classList.remove('seleact');
-    document.getElementById('deaths').classList.remove('seleact');
-  }
-
-  function DisplayDeaths() {
-    setshowCases(false);
-    setshowRecoveries(false);
-    setshowDeaths(true);
-    document.getElementById('deaths').classList.add('seleact');
-    document.getElementById('recoveries').classList.remove('seleact');
-    document.getElementById('cases').classList.remove('seleact');
-  }
-
+  /*
   //Calculate the color for layer according to the argument d
-  function ColorCases(d, max) {
-    let num = max/22;
-    return d >= max ? '#a63603' :
-           d > (num + num + num)  ? '#e6550d' :
-           d > (num + num)   ? '#fd8d3c' :
-           d > (num)   ? '#fdbe85' :
-                      '#feedde';
-  }
-  function ColorRecoveries(d, max) {
-    let num = max/22;
+  function ColorVax(d, max) {
+    let num = max/30;
     return d > max ? '#006d2c' :
            d > (num + num + num)  ? '#31a354' :
            d > (num + num)  ? '#74c476' :
            d > (num)  ? '#bae4b3' :
                       '#edf8e9';
   }
-  function ColorDeaths(d, max) {
-    let num = max/22;
-    return d > max ? '#a50f15' :
-           d > (num + num + num)  ? '#de2d26' :
-           d > (num + num)  ? '#fb6a4a' :
-           d > (num)  ? '#fcae91' :
-                      '#fee5d9';
+  */
+  //Calculate the color for layer according to the argument d
+  function ColorVax(d, max) {
+    let num = max/9;
+    return d > max ? '#081d58' :
+           d > (num + num + num + num + num + num + num)  ? '#253494' :
+           d > (num + num + num + num + num + num)  ? '#225ea8' :
+           d > (num + num + num + num + num)  ? '#1d91c0' :
+           d > (num + num + num + num)  ? '#41b6c4' :
+           d > (num + num + num)  ? '#7fcdbb' :
+           d > (num + num) ? '#c7e9b4' :
+           d> (num) ? '#edf8b1' :
+                      '#ffffd9';
   }
   
   //Find which index is county data is stored in the array 
@@ -98,6 +63,7 @@ export default function App() {
       if(county[i] === countyid){
         if(state[i] === stateid){
           index = i;
+          //console.log(index);
           return index;
         }
       }
@@ -125,19 +91,17 @@ export default function App() {
       end = "" + end.toISOString().split("T")[0];
     }
 
-    fetch("https://54.224.113.88:8080/rest/metrics/CovidData/covid_heatmap_sums/'" + start + "'&'" + end + "'")
+    fetch("http://localhost:8080/rest/metrics/CovidData/covid_vax_sums/'" + start + "'&'" + end + "'")
       .then(response => response.json())
       .then(
         (json_string) => {
           let json_data = JSON.parse(json_string);
           let data_rows = json_data.DATA;
           console.log(data_rows);
+
           setCounty(data_rows.COUNTY_CODE);
           setState(data_rows.STATE_CODE);
-          console.log(data_rows.COUNTY_CODE, data_rows.STATE_CODE);
-          setCases(data_rows.SUM_CASES);
-          setRecoveries(data_rows.SUM_RECOVERIES);
-          setDeaths(data_rows.SUM_DEATHS);
+          setVaccines(data_rows.SERIES_COMPLETE);       
           setIsLoaded(true);
           return;
         },
@@ -209,24 +173,15 @@ export default function App() {
           let show;
 
           let i = getindex(countyid, stateid);
-          console.log(i);
-          console.log(countyid,stateid);
-          if(showCases === true){
-            steMax(Math.max(...cases));
-            color = ColorCases(cases[i], max);
-            show = cases[i];
-          }
-          if(showRecoveries === true){
-            steMax(Math.max(...recoveries));
-            color = ColorRecoveries(recoveries[i], max);
-            show = recoveries[i];
-          }
-          if(showDeaths === true){
-            steMax(Math.max(...deaths));
-            color = ColorDeaths(deaths[i], max);
-            show = deaths[i];
+
+          if(showVaccines === true){
+            steMax(Math.max(...vaccines));                
+            
+            color = ColorVax(vaccines[i], max);    
+            show = vaccines[i];                           
           }
           
+
           //If county data is found in the databse 
           if(i !== undefined){
             source = stateid + countyid + "&" + show;
@@ -270,7 +225,7 @@ export default function App() {
             }
           });
 
-          if(cases.length !== 0){
+          if(vaccines.length !== 0){
             setshowTable(true);
           }
           //if no data is avalable dont show the table
@@ -300,17 +255,8 @@ export default function App() {
         county_name = displayFeat.properties.NAME + "";
 
         if(county_name.toString() !== 'undefined'){
-          display_data = display_data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          if(showCases === true){
-            document.getElementById('name').innerHTML = county_name + "<br>" + "Cases: " + display_data;
-          }
-          if(showRecoveries === true){
-            document.getElementById('name').innerHTML = county_name + "<br>" + "Recoveries: " + display_data;
-          }
-          if(showDeaths === true){
-            document.getElementById('name').innerHTML = county_name + "<br>" + "Deaths: " + display_data;
-          }
-
+            display_data = display_data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            document.getElementById('name').innerHTML = county_name + "<br>" + "Vaccines: " + display_data;
           }
       });
     });
@@ -324,6 +270,7 @@ export default function App() {
               <div ref={mapContainer} className="map-container" />
             </div>
 
+
             <div id="date">
               <DatePicker
                 onChange={onChangeStartDate}
@@ -334,24 +281,15 @@ export default function App() {
                 value={endDate}
               />
             </div>
-            
-            <div className="centerbar" id="options">
-              <button id="cases" onClick={DisplayCases} className="button seleact">Cases</button>  | <button id="recoveries" onClick={DisplayRecoveries} className="button">Recoveries</button> | <button id="deaths" onClick={DisplayDeaths} className="button">Deaths</button>
-            </div>
-
             <div className="sidebar" id="name"></div>
 
+            <div></div>
             {showTable === true ?(
               <div id='legend'>
                 <p>
-                  {showCases === true ?(
-                    <ListCases max={max} getcolor={ColorCases}/>
-                  ) : null}
-                  {showRecoveries === true ?(
-                    <ListRecoveries max={max} getcolor={ColorCases}/>
-                  ) : null}
-                  {showDeaths === true ?(
-                    <ListDeaths max={max} getcolor={ColorCases}/>
+                  {showVaccines === true ? (
+                    <ListVaccines max={max} getcolor={ColorVax}/>
+
                   ) : null}
                 </p>
               </div>
